@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurora Films Studios — Cine dentro de Roblox</title>
+<link rel="icon" href="aurora-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060f0c;
+    --bg-soft:#0b1d18;
+    --panel:#0d221c;
+    --amber:#f9a61e;
+    --amber-soft:#fbc356;
+    --orange:#e9650e;
+    --teal:#1e9273;
+    --teal-deep:#0b3f37;
+    --cream:#f3eee3;
+    --cream-dim:#c9cdc4;
+    --muted:#8aa199;
+    --line:rgba(243,238,227,0.12);
+    --aurora-gradient: linear-gradient(180deg, var(--amber) 0%, var(--orange) 38%, var(--teal) 66%, var(--teal-deep) 100%);
+    --aurora-gradient-h: linear-gradient(90deg, var(--amber) 0%, var(--orange) 38%, var(--teal) 66%, var(--teal-deep) 100%);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+
+  body{
+    background:var(--bg);
+    color:var(--cream);
+    font-family:'Manrope', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+
+  ::selection{ background:var(--orange); color:var(--bg); }
+
+  a{ color:inherit; text-decoration:none; }
+  img{ display:block; max-width:100%; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+
+  h1,h2,h3,.display{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:800;
+    line-height:0.92;
+    letter-spacing:0.01em;
+    text-transform:uppercase;
+  }
+
+  .wrap{
+    max-width:1180px;
+    margin:0 auto;
+    padding:0 32px;
+  }
+
+  /* grain overlay */
+  body::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    z-index:2;
+    pointer-events:none;
+    opacity:0.05;
+    mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- LOADER ---------- */
+  #loader{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    background:var(--bg);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    gap:26px;
+    transition:opacity 0.7s ease, visibility 0.7s ease;
+  }
+  #loader.hide{
+    opacity:0;
+    visibility:hidden;
+    pointer-events:none;
+  }
+  .loader-logo{
+    width:96px;
+    height:96px;
+    position:relative;
+    animation:loaderPulse 1.8s ease-in-out infinite;
+  }
+  .loader-logo img{
+    width:100%;
+    height:100%;
+    object-fit:contain;
+    filter:drop-shadow(0 0 26px rgba(233,101,14,0.35));
+  }
+  @keyframes loaderPulse{
+    0%,100%{ transform:scale(1); }
+    50%{ transform:scale(1.06); }
+  }
+  .loader-bar{
+    width:180px;
+    height:2px;
+    background:rgba(243,238,227,0.14);
+    border-radius:2px;
+    overflow:hidden;
+  }
+  .loader-bar span{
+    display:block;
+    height:100%;
+    width:0%;
+    background:var(--aurora-gradient-h);
+    animation:loaderFill 1.6s ease forwards;
+  }
+  @keyframes loaderFill{
+    0%{ width:0%; }
+    100%{ width:100%; }
+  }
+  .loader-label{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:700;
+    letter-spacing:0.14em;
+    font-size:13px;
+    color:var(--cream-dim);
+    text-transform:uppercase;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    padding:20px 0;
+    transition:background 0.4s ease, padding 0.4s ease, border-color 0.4s ease;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{
+    background:rgba(6,15,12,0.86);
+    backdrop-filter:blur(10px);
+    padding:14px 0;
+    border-bottom:1px solid var(--line);
+  }
+  nav{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .brand img{ width:32px; height:32px; object-fit:contain; }
+  .brand-name{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:800;
+    font-size:17px;
+    letter-spacing:0.04em;
+    text-transform:uppercase;
+  }
+  .nav-links{
+    display:flex;
+    gap:34px;
+    list-style:none;
+  }
+  .nav-links a{
+    font-size:14.5px;
+    font-weight:600;
+    color:var(--cream-dim);
+    transition:color 0.25s ease;
+    position:relative;
+    padding-bottom:3px;
+  }
+  .nav-links a:hover, .nav-links a:focus-visible{ color:var(--cream); }
+  .nav-links a::after{
+    content:"";
+    position:absolute;
+    left:0; bottom:0;
+    width:0%;
+    height:2px;
+    background:var(--aurora-gradient-h);
+    transition:width 0.3s ease;
+  }
+  .nav-links a:hover::after{ width:100%; }
+
+  .nav-cta{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 20px;
+    border-radius:999px;
+    background:var(--cream);
+    color:var(--bg);
+    font-weight:700;
+    font-size:14px;
+    transition:transform 0.25s ease, box-shadow 0.25s ease;
+  }
+  .nav-cta:hover{ transform:translateY(-2px); box-shadow:0 8px 22px rgba(249,166,30,0.22); }
+
+  .burger{
+    display:none;
+    width:32px; height:22px;
+    position:relative;
+  }
+  .burger span{
+    position:absolute; left:0; right:0; height:2px;
+    background:var(--cream); transition:0.3s ease;
+  }
+  .burger span:nth-child(1){ top:0; }
+  .burger span:nth-child(2){ top:10px; }
+  .burger span:nth-child(3){ top:20px; }
+  .burger.open span:nth-child(1){ top:10px; transform:rotate(45deg); }
+  .burger.open span:nth-child(2){ opacity:0; }
+  .burger.open span:nth-child(3){ top:10px; transform:rotate(-45deg); }
+
+  .mobile-menu{
+    display:none;
+    position:fixed;
+    top:0; right:0; bottom:0;
+    width:78%;
+    max-width:340px;
+    background:var(--bg-soft);
+    z-index:99;
+    padding:100px 32px 40px;
+    transform:translateX(100%);
+    transition:transform 0.4s ease;
+    border-left:1px solid var(--line);
+  }
+  .mobile-menu.open{ transform:translateX(0); }
+  .mobile-menu ul{ list-style:none; display:flex; flex-direction:column; gap:26px; }
+  .mobile-menu a{ font-family:'Big Shoulders Display'; font-size:26px; font-weight:700; text-transform:uppercase; }
+
+  @media (max-width:860px){
+    .nav-links, .nav-cta.desktop-only{ display:none; }
+    .burger{ display:block; }
+    .mobile-menu{ display:block; }
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    padding-top:120px;
+    overflow:hidden;
+  }
+  .hero-wave{
+    position:absolute;
+    right:-8%;
+    top:-8%;
+    width:62%;
+    height:120%;
+    opacity:0.9;
+    z-index:0;
+    pointer-events:none;
+  }
+  .hero-wave svg{ width:100%; height:100%; }
+  .hero-glow{
+    position:absolute;
+    inset:0;
+    background:radial-gradient(ellipse 60% 50% at 78% 30%, rgba(233,101,14,0.14), transparent 60%),
+               radial-gradient(ellipse 50% 60% at 85% 80%, rgba(30,146,115,0.18), transparent 65%);
+    z-index:0;
+  }
+  .hero-content{
+    position:relative;
+    z-index:1;
+    max-width:680px;
+  }
+  .hero-badge{
+    display:inline-flex;
+    align-items:center;
+    gap:9px;
+    padding:8px 16px 8px 10px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    font-size:13.5px;
+    font-weight:600;
+    color:var(--cream-dim);
+    margin-bottom:28px;
+    background:rgba(243,238,227,0.03);
+  }
+  .hero-badge .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--aurora-gradient-h);
+  }
+  .hero h1{
+    font-size:clamp(2.9rem, 7.2vw, 5.6rem);
+    margin-bottom:26px;
+  }
+  .hero h1 .grad{
+    background:var(--aurora-gradient-h);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .hero p{
+    font-size:18px;
+    color:var(--cream-dim);
+    max-width:490px;
+    margin-bottom:38px;
+  }
+  .hero-actions{
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    padding:15px 28px;
+    border-radius:999px;
+    font-weight:700;
+    font-size:15px;
+    transition:transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+  }
+  .btn-primary{
+    background:var(--aurora-gradient-h);
+    color:#0a1512;
+  }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 30px rgba(233,101,14,0.28); }
+  .btn-ghost{
+    border:1px solid var(--line);
+    color:var(--cream);
+  }
+  .btn-ghost:hover{ background:rgba(243,238,227,0.06); transform:translateY(-2px); }
+
+  .hero-scroll{
+    position:absolute;
+    bottom:36px;
+    left:32px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:12.5px;
+    color:var(--muted);
+    z-index:1;
+  }
+  .hero-scroll .line{
+    width:28px; height:1px;
+    background:var(--muted);
+  }
+
+  /* section shared */
+  section{ position:relative; padding:120px 0; }
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:40px;
+    margin-bottom:56px;
+    flex-wrap:wrap;
+  }
+  .kicker{
+    font-size:14px;
+    font-weight:700;
+    color:var(--orange);
+    margin-bottom:10px;
+  }
+  .section-head h2{
+    font-size:clamp(2.1rem, 4.4vw, 3.4rem);
+  }
+  .section-head p{
+    max-width:360px;
+    color:var(--cream-dim);
+    font-size:15.5px;
+  }
+
+  /* ---------- TRAILER ---------- */
+  .trailer{
+    background:var(--bg-soft);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .player{
+    position:relative;
+    aspect-ratio:16/9;
+    border-radius:18px;
+    overflow:hidden;
+    border:1px solid var(--line);
+    background:linear-gradient(160deg, #0f2a24, #081713);
+  }
+  .player-frame{
+    position:absolute; inset:0;
+    display:none;
+  }
+  .player-frame iframe,
+  .player-frame video{
+    width:100%; height:100%; border:0;
+    background:#000;
+    object-fit:contain;
+  }
+  .player-frame.active{ display:block; }
+  .player-poster{
+    position:absolute; inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .skyline{
+    position:absolute;
+    bottom:0; left:0; right:0;
+    height:62%;
+    opacity:0.9;
+  }
+  .skyline svg{ width:100%; height:100%; display:block; }
+  .player-overlay-grad{
+    position:absolute; inset:0;
+    background:linear-gradient(180deg, rgba(6,15,12,0) 0%, rgba(6,15,12,0.55) 78%, rgba(6,15,12,0.85) 100%);
+  }
+  .play-btn{
+    position:relative;
+    z-index:2;
+    width:82px; height:82px;
+    border-radius:50%;
+    background:var(--cream);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform 0.3s ease;
+  }
+  .play-btn:hover{ transform:scale(1.08); }
+  .play-btn svg{ width:26px; height:26px; margin-left:4px; }
+  .player-caption{
+    position:absolute;
+    left:26px; bottom:22px;
+    z-index:2;
+  }
+  .player-caption .tag{
+    font-size:12.5px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    color:var(--amber-soft);
+    margin-bottom:6px;
+  }
+  .player-caption h3{
+    font-size:28px;
+    font-weight:700;
+    text-transform:none;
+  }
+  .trailer-meta{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    gap:28px;
+    margin-top:40px;
+  }
+  .trailer-meta div{
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  .trailer-meta .label{
+    font-size:12.5px;
+    color:var(--muted);
+    margin-bottom:6px;
+  }
+  .trailer-meta .val{
+    font-size:16px;
+    font-weight:700;
+  }
+  @media (max-width:720px){
+    .trailer-meta{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- SERVICES ---------- */
+  .services-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    border-radius:18px;
+    overflow:hidden;
+  }
+  .service-card{
+    background:var(--bg);
+    padding:40px 32px;
+    transition:background 0.3s ease;
+  }
+  .service-card:hover{ background:var(--panel); }
+  .service-num{
+    font-family:'Big Shoulders Display';
+    font-size:15px;
+    font-weight:700;
+    color:var(--muted);
+    margin-bottom:26px;
+  }
+  .service-card h3{
+    font-size:24px;
+    text-transform:none;
+    margin-bottom:14px;
+    font-weight:700;
+  }
+  .service-card p{
+    color:var(--cream-dim);
+    font-size:15px;
+  }
+  @media (max-width:860px){
+    .services-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- PROCESS ---------- */
+  .process{
+    background:var(--bg-soft);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .process-list{
+    display:flex;
+    flex-direction:column;
+  }
+  .process-row{
+    display:grid;
+    grid-template-columns:90px 1fr 1fr;
+    gap:32px;
+    align-items:center;
+    padding:32px 0;
+    border-top:1px solid var(--line);
+  }
+  .process-row:last-child{ border-bottom:1px solid var(--line); }
+  .process-index{
+    font-family:'Big Shoulders Display';
+    font-size:44px;
+    font-weight:800;
+    background:var(--aurora-gradient-h);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .process-row h3{
+    font-size:22px;
+    text-transform:none;
+    font-weight:700;
+  }
+  .process-row p{
+    color:var(--cream-dim);
+    font-size:15px;
+  }
+  @media (max-width:720px){
+    .process-row{ grid-template-columns:56px 1fr; }
+    .process-row p{ grid-column:2; }
+  }
+
+  /* ---------- PROJECTS ---------- */
+  .projects-grid{
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:22px;
+  }
+  .project-card{
+    border-radius:16px;
+    border:1px solid var(--line);
+    overflow:hidden;
+    background:var(--panel);
+  }
+  .project-thumb{
+    aspect-ratio:4/3;
+    position:relative;
+    display:flex;
+    align-items:flex-end;
+    padding:20px;
+  }
+  .project-thumb.live{
+    background:var(--aurora-gradient);
+  }
+  .project-thumb.soon{
+    background:repeating-linear-gradient(135deg, rgba(243,238,227,0.05) 0 2px, transparent 2px 14px);
+    background-color:#0c231d;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:0;
+  }
+  .project-thumb.live span{
+    font-family:'Big Shoulders Display';
+    font-weight:800;
+    font-size:15px;
+    color:#0a1512;
+    background:rgba(243,238,227,0.85);
+    padding:6px 12px;
+    border-radius:999px;
+  }
+  .project-thumb.soon span{
+    font-size:13px;
+    color:var(--muted);
+    font-weight:600;
+  }
+  .project-info{ padding:22px; }
+  .project-info h3{
+    font-size:19px;
+    text-transform:none;
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .project-info p{
+    font-size:14px;
+    color:var(--muted);
+  }
+  @media (max-width:860px){
+    .projects-grid{ grid-template-columns:1fr; }
+  }
+
+  /* ---------- JOIN ---------- */
+  .join{
+    text-align:left;
+    border-top:1px solid var(--line);
+  }
+  .join-inner{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+  .join h2{
+    font-size:clamp(2.2rem, 5vw, 3.6rem);
+    max-width:560px;
+  }
+  .join p{
+    color:var(--cream-dim);
+    max-width:420px;
+    margin-top:18px;
+    font-size:16px;
+  }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    border-top:1px solid var(--line);
+    padding:64px 0 32px;
+  }
+  .footer-top{
+    display:flex;
+    justify-content:space-between;
+    gap:40px;
+    flex-wrap:wrap;
+    margin-bottom:52px;
+  }
+  .footer-brand{ display:flex; align-items:center; gap:12px; }
+  .footer-brand img{ width:30px; height:30px; }
+  .footer-brand span{
+    font-family:'Big Shoulders Display';
+    font-weight:800;
+    font-size:16px;
+    text-transform:uppercase;
+  }
+  .footer-cols{
+    display:flex;
+    gap:64px;
+    flex-wrap:wrap;
+  }
+  .footer-col h4{
+    font-size:13px;
+    color:var(--muted);
+    margin-bottom:14px;
+    font-weight:700;
+  }
+  .footer-col ul{ list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .footer-col a{
+    font-size:14.5px;
+    color:var(--cream-dim);
+    transition:color 0.2s ease;
+  }
+  .footer-col a:hover{ color:var(--cream); }
+  .footer-bottom{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:20px;
+    flex-wrap:wrap;
+    padding-top:28px;
+    border-top:1px solid var(--line);
+    font-size:13px;
+    color:var(--muted);
+  }
+  .socials{ display:flex; gap:14px; }
+  .socials a{
+    width:36px; height:36px;
+    border:1px solid var(--line);
+    border-radius:50%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:border-color 0.2s ease, transform 0.2s ease;
+  }
+  .socials a:hover{ border-color:var(--orange); transform:translateY(-2px); }
+  .socials svg{ width:16px; height:16px; }
+
+  :focus-visible{
+    outline:2px solid var(--amber-soft);
+    outline-offset:3px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-logo"><img src="aurora-logo.png" alt=""></div>
+    <div class="loader-bar"><span></span></div>
+    <div class="loader-label">Aurora Films Studios</div>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#inicio">Inicio</a></li>
+      <li><a href="#trailer">Tráiler</a></li>
+      <li><a href="#estudio">Estudio</a></li>
+      <li><a href="#proyectos">Proyectos</a></li>
+      <li><a href="#equipo">Únete</a></li>
+    </ul>
+  </div>
+
+  <!-- HEADER -->
+  <header id="siteHeader">
+    <div class="wrap">
+      <nav>
+        <a href="#inicio" class="brand">
+          <img src="aurora-logo.png" alt="Aurora Films Studios">
+          <span class="brand-name">Aurora Films Studios</span>
+        </a>
+        <ul class="nav-links">
+          <li><a href="#inicio">Inicio</a></li>
+          <li><a href="#trailer">Tráiler</a></li>
+          <li><a href="#estudio">Estudio</a></li>
+          <li><a href="#proyectos">Proyectos</a></li>
+          <li><a href="#equipo">Únete</a></li>
+        </ul>
+        <a href="https://discord.gg/CtJpdXScFb" class="nav-cta desktop-only">Discord</a>
+        <button class="burger" id="burger" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="hero-glow"></div>
+    <div class="hero-wave">
+      <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+        <defs>
+          <linearGradient id="heroGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f9a61e"/>
+            <stop offset="38%" stop-color="#e9650e"/>
+            <stop offset="66%" stop-color="#1e9273"/>
+            <stop offset="100%" stop-color="#0b3f37"/>
+          </linearGradient>
+        </defs>
+        <path fill="url(#heroGrad)" opacity="0.5" d="M120 480 C90 480 90 420 130 400 C200 365 210 300 210 250 C210 160 280 90 360 90 L360 480 Z"/>
+      </svg>
+    </div>
+    <div class="wrap">
+      <div class="hero-content">
+        <div class="hero-badge"><span class="dot"></span>Estudio de cine en Roblox</div>
+        <h1>Hacemos <span class="grad">cine</span> dentro de Roblox</h1>
+        <p>Aurora Films Studios graba películas y tráilers dentro de Roblox con la mirada, el encuadre y el color de un estudio de cine real. Nuestra primera producción: el tráiler de Madrid RP ESP.</p>
+        <div class="hero-actions">
+          <a href="#trailer" class="btn btn-primary">Ver el tráiler</a>
+          <a href="https://discord.gg/CtJpdXScFb" class="btn btn-ghost">Únete al Discord</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll"><span class="line"></span>Desplázate</div>
+  </section>
+
+  <!-- TRAILER -->
+  <section class="trailer" id="trailer">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Nuestro primer tráiler</div>
+          <h2>Madrid RP ESP</h2>
+        </div>
+        <p>Un vistazo cinemático a las calles de Madrid RP ESP, rodado íntegramente dentro de Roblox: encuadres de ciudad, coches y la vida del servidor contada como una película.</p>
+      </div>
+
+      <div class="player" id="player">
+        <div class="player-frame" id="playerFrame">
+          <!-- El vídeo debe estar en la misma carpeta que este archivo HTML -->
+          <video id="playerVideo" controls playsinline preload="none">
+            <source src="Trailer Madrid 2.mp4" type="video/mp4">
+            Tu navegador no puede reproducir este vídeo.
+          </video>
+        </div>
+        <div class="player-poster" id="playerPoster">
+          <div class="skyline">
+            <svg viewBox="0 0 1200 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#e9650e"/>
+                  <stop offset="55%" stop-color="#1e9273"/>
+                  <stop offset="100%" stop-color="#0b3f37"/>
+                </linearGradient>
+              </defs>
+              <rect x="0" y="120" width="60" height="180" fill="url(#skyGrad)" opacity="0.55"/>
+              <rect x="70" y="80" width="90" height="220" fill="url(#skyGrad)" opacity="0.7"/>
+              <rect x="170" y="150" width="50" height="150" fill="url(#skyGrad)" opacity="0.5"/>
+              <rect x="230" y="60" width="70" height="240" fill="url(#skyGrad)" opacity="0.75"/>
+              <rect x="310" y="110" width="100" height="190" fill="url(#skyGrad)" opacity="0.6"/>
+              <rect x="420" y="40" width="60" height="260" fill="url(#skyGrad)" opacity="0.85"/>
+              <rect x="490" y="95" width="80" height="205" fill="url(#skyGrad)" opacity="0.6"/>
+              <rect x="580" y="130" width="55" height="170" fill="url(#skyGrad)" opacity="0.5"/>
+              <rect x="645" y="70" width="90" height="230" fill="url(#skyGrad)" opacity="0.75"/>
+              <rect x="745" y="110" width="65" height="190" fill="url(#skyGrad)" opacity="0.6"/>
+              <rect x="820" y="30" width="60" height="270" fill="url(#skyGrad)" opacity="0.9"/>
+              <rect x="890" y="100" width="95" height="200" fill="url(#skyGrad)" opacity="0.6"/>
+              <rect x="995" y="150" width="55" height="150" fill="url(#skyGrad)" opacity="0.5"/>
+              <rect x="1060" y="85" width="80" height="215" fill="url(#skyGrad)" opacity="0.7"/>
+              <rect x="1150" y="130" width="50" height="170" fill="url(#skyGrad)" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="player-overlay-grad"></div>
+          <div class="player-caption">
+            <div class="tag">01 — Tráiler oficial</div>
+            <h3>Madrid RP ESP</h3>
+          </div>
+          <button class="play-btn" id="playBtn" aria-label="Reproducir tráiler">
+            <svg viewBox="0 0 24 24" fill="#0a1512"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="trailer-meta">
+        <div>
+          <div class="label">Producción</div>
+          <div class="val">Aurora Films Studios</div>
+        </div>
+        <div>
+          <div class="label">Rodado en</div>
+          <div class="val">Roblox</div>
+        </div>
+        <div>
+          <div class="label">Servidor</div>
+          <div class="val">Madrid RP ESP</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section id="estudio">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="kicker">El estudio</div>
+          <h2>Qué hacemos</h2>
+        </div>
+        <p>Producimos contenido cinemático para la comunidad de Roblox, del guion al estreno.</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card">
+          <div class="service-num">Películas</div>
+          <h3>Cortometrajes narrativos</h3>
+          <p>Historias con guion, actores y dirección, rodadas por completo dentro de Roblox.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-num">Tráilers</div>
+          <h3>Piezas promocionales</h3>
+          <p>Tráilers para servidores y comunidades que quieren presentar su mundo con impacto.</p>
+        </div>
+        <div class="service-card">
+          <div class="service-num">Roleplay</div>
+          <h3>Producciones para RP</h3>
+          <p>Contenido cinemático a medida para servidores de rol: intros, escenas y cápsulas de historia.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROCESO -->
+  <section class="process">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Cómo trabajamos</div>
+          <h2>De la idea a la pantalla</h2>
+        </div>
+      </div>
+      <div class="process-list">
+        <div class="process-row">
+          <div class="process-index">01</div>
+          <h3>Guion y localizaciones</h3>
+          <p>Definimos la historia, los personajes y buscamos los mejores escenarios dentro de Roblox.</p>
+        </div>
+        <div class="process-row">
+          <div class="process-index">02</div>
+          <h3>Grabación en Roblox</h3>
+          <p>Rodamos con cámaras y encuadres pensados como en un set de rodaje real.</p>
+        </div>
+        <div class="process-row">
+          <div class="process-index">03</div>
+          <h3>Montaje y color</h3>
+          <p>Editamos, sonorizamos y aplicamos el tratamiento de color propio de Aurora Films.</p>
+        </div>
+        <div class="process-row">
+          <div class="process-index">04</div>
+          <h3>Estreno y difusión</h3>
+          <p>Publicamos la pieza final y la acompañamos en su lanzamiento junto a la comunidad.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROYECTOS -->
+  <section id="proyectos">
+    <div class="wrap">
+      <div class="section-head">
+        <div>
+          <div class="kicker">Filmografía</div>
+          <h2>Proyectos</h2>
+        </div>
+        <p>Nuestro primer trabajo ya está fuera. Hay más en camino.</p>
+      </div>
+      <div class="projects-grid">
+        <div class="project-card">
+          <div class="project-thumb live"><span>Disponible</span></div>
+          <div class="project-info">
+            <h3>Madrid RP ESP</h3>
+            <p>Tráiler oficial</p>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-thumb soon"><span>En producción</span></div>
+          <div class="project-info">
+            <h3>Próximo proyecto</h3>
+            <p>Guardamos el título para el estreno</p>
+          </div>
+        </div>
+        <div class="project-card">
+          <div class="project-thumb soon"><span>En guion</span></div>
+          <div class="project-info">
+            <h3>Próximo proyecto</h3>
+            <p>Anunciamos pronto</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ÚNETE -->
+  <section class="join" id="equipo">
+    <div class="wrap join-inner">
+      <div>
+        <h2>¿Quieres rodar con nosotros?</h2>
+        <p>Buscamos actores, cámaras, editores y guionistas de la comunidad de Roblox para crecer el catálogo de Aurora Films Studios.</p>
+      </div>
+      <a href="#" class="btn btn-primary">Únete al Discord</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="aurora-logo.png" alt="Aurora Films Studios">
+          <span>Aurora Films Studios</span>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Estudio</h4>
+            <ul>
+              <li><a href="#estudio">Qué hacemos</a></li>
+              <li><a href="#proyectos">Proyectos</a></li>
+              <li><a href="#equipo">Únete al equipo</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Tráiler</h4>
+            <ul>
+              <li><a href="#trailer">Madrid RP ESP</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 Aurora Films Studios. Producción independiente en Roblox.</span>
+        <div class="socials">
+          <a href="https://discord.gg/CtJpdXScFb" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 5.3A17.6 17.6 0 0 0 15.9 4l-.3.6a13 13 0 0 1 3.7 1.4 15 15 0 0 0-14.6 0A13 13 0 0 1 8.4 4.6L8.1 4a17.5 17.5 0 0 0-4.4 1.3C1.2 9.6.6 13.8 1 17.9a17.7 17.7 0 0 0 5.3 2.6l.8-1.3a11 11 0 0 1-1.9-.9c.2-.1.3-.2.5-.3a12.7 12.7 0 0 0 10.6 0l.5.3a11 11 0 0 1-1.9.9l.8 1.3a17.6 17.6 0 0 0 5.3-2.6c.5-4.7-.7-8.9-3.7-12.6ZM8.7 15.4c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.8.9 1.7 1.9c0 1-.8 1.9-1.7 1.9Zm6.6 0c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.7.9 1.7 1.9-.8 1.9-1.7 1.9Z"/></svg></a>
+          <a href="https://www.youtube.com/@AuroraFilmsStudios" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.2-.4-4.7a3 3 0 0 0-2.1-2.1C18.9 4.7 12 4.7 12 4.7s-6.9 0-8.5.5A3 3 0 0 0 1.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a3 3 0 0 0 2.1 2.1c1.6.5 8.5.5 8.5.5s6.9 0 8.5-.5a3 3 0 0 0 2.1-2.1c.4-1.5.4-4.7.4-4.7ZM9.8 15.3V8.7l5.7 3.3-5.7 3.3Z"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 2h-3.2v13.6a2.9 2.9 0 1 1-2-2.7v-3.3a6.2 6.2 0 1 0 5.2 6.1V8.8a7.9 7.9 0 0 0 4.6 1.5V7.1a4.6 4.6 0 0 1-4.6-4.6Z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-7.2 8.2L23 21h-6.6l-5.2-6.5L5.2 21H2l7.7-8.8L1.6 3h6.7l4.7 6L18.9 3Zm-1.2 16.2h1.7L7.4 4.7H5.6l12.1 14.5Z"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // Loader
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      document.getElementById('loader').classList.add('hide');
+    }, 1400);
+  });
+
+  // Header scroll state
+  const header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', () => {
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  // Mobile menu
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  burger.addEventListener('click', () => {
+    burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', () => {
+    burger.classList.remove('open');
+    mobileMenu.classList.remove('open');
+  }));
+
+  // Trailer player
+  const playBtn = document.getElementById('playBtn');
+  const playerPoster = document.getElementById('playerPoster');
+  const playerFrame = document.getElementById('playerFrame');
+  const playerVideo = document.getElementById('playerVideo');
+
+  playBtn.addEventListener('click', () => {
+    playerFrame.classList.add('active');
+    playerPoster.style.display = 'none';
+    playerVideo.play().catch(() => {
+      // Si el navegador bloquea la reproducción automática, el usuario puede darle a play en los controles
+    });
+  });
+
+  // Si el vídeo termina o se pausa al principio, se puede volver a mostrar la portada al hacer clic de nuevo (opcional)
+  playerVideo.addEventListener('ended', () => {
+    playerVideo.currentTime = 0;
+  });
+</script>
+
+</body>
+</html>
