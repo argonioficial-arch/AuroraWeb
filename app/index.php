@@ -451,7 +451,7 @@
           <p>Un vistazo cinemático a las calles de Madrid RP ESP, rodado íntegramente dentro de Roblox. El tráiler se aloja en nuestro canal de YouTube.</p>
         </div>
 
-        <a class="player" id="ytPlayerLink" href="https://www.youtube.com/watch?v=VIDEO_ID" target="_blank" rel="noopener">
+        <a class="player" id="ytPlayerLink" href="https://www.youtube.com/watch?v=3zfrgzTyEYE&t=29s" target="_blank" rel="noopener">
           <div class="skyline">
             <svg viewBox="0 0 1200 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
