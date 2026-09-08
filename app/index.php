@@ -451,7 +451,7 @@
           <p>Un vistazo cinemático a las calles de Madrid RP ESP, rodado íntegramente dentro de Roblox. El tráiler se aloja en nuestro canal de YouTube.</p>
         </div>
 
-        <a class="player" id="ytPlayerLink" href="https://www.youtube.com/watch?v=3zfrgzTyEYE&t=29s" target="_blank" rel="noopener">
+        <a class="player" id="ytPlayerLink" href="https://www.youtube.com/watch?v=VIDEO_ID" target="_blank" rel="noopener">
           <div class="skyline">
             <svg viewBox="0 0 1200 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
               <defs>
@@ -657,7 +657,7 @@
         <h1>Acceso del equipo</h1>
         <p class="sub">Panel privado para revisar candidaturas y casting. Solo para el equipo de dirección de Aurora Films Studios.</p>
         <form class="login-form" id="loginForm">
-          <div class="form-error" id="loginError">Usuario o contraseña incorrectos.</div>
+          <div class="form-error" id="loginError"></div>
           <div class="field">
             <label for="loginUser">Usuario</label>
             <input type="text" id="loginUser" autocomplete="username" required>
@@ -867,16 +867,45 @@
   var castingsCache = []; // último listado de castings abiertos obtenido de la API
 
   /* ================= API HELPERS ================= */
+  var API_TIMEOUT_MS = 12000;
+
+  function fetchWithTimeout(url, opts){
+    var controller = (typeof AbortController !== 'undefined') ? new AbortController() : null;
+    var timeoutId = null;
+    if(controller){
+      opts.signal = controller.signal;
+      timeoutId = setTimeout(function(){ controller.abort(); }, API_TIMEOUT_MS);
+    }
+    return fetch(url, opts).then(function(r){
+      if(timeoutId) clearTimeout(timeoutId);
+      return r.text().then(function(text){
+        var data;
+        try{
+          data = text ? JSON.parse(text) : {};
+        }catch(e){
+          throw new Error('El servidor no devolvió una respuesta válida (¿la API está desplegada y la base de datos accesible?).');
+        }
+        return { ok:r.ok, data:data };
+      });
+    }).catch(function(err){
+      if(timeoutId) clearTimeout(timeoutId);
+      if(err && err.name === 'AbortError'){
+        throw new Error('El servidor tardó demasiado en responder. Comprueba la conexión a la base de datos.');
+      }
+      throw err;
+    });
+  }
+
   function apiGet(url){
-    return fetch(url, { method:'GET', credentials:'same-origin' }).then(function(r){ return r.json().then(function(data){ return { ok:r.ok, data:data }; }); });
+    return fetchWithTimeout(url, { method:'GET', credentials:'same-origin' });
   }
   function apiPost(url, body){
-    return fetch(url, {
+    return fetchWithTimeout(url, {
       method:'POST',
       credentials:'same-origin',
       headers:{ 'Content-Type':'application/json' },
       body: JSON.stringify(body || {})
-    }).then(function(r){ return r.json().then(function(data){ return { ok:r.ok, data:data }; }); });
+    });
   }
 
   /* ================= LOADER ================= */
@@ -963,6 +992,10 @@
         renderAdmin();
         showView('admin');
         window.scrollTo(0,0);
+      }).catch(function(err){
+        showView('login');
+        window.scrollTo(0,0);
+        setLoginNotice('No se pudo conectar con el servidor. ' + (err.message || ''));
       });
       return;
     }
@@ -972,6 +1005,9 @@
           location.hash = '#/admin';
           return;
         }
+        showView('login');
+        window.scrollTo(0,0);
+      }).catch(function(){
         showView('login');
         window.scrollTo(0,0);
       });
@@ -1090,6 +1126,8 @@
           ) +
         '</div>';
       }).join('');
+    }).catch(function(err){
+      grid.innerHTML = '<div class="casting-empty" style="grid-column:1/-1;">No se pudo conectar con el servidor. ' + escapeHtml(err.message || '') + '</div>';
     });
   }
 
@@ -1162,6 +1200,8 @@
         castingsCache = (res.ok && res.data.castings) || [];
         var c = castingsCache.filter(function(x){ return String(x.id) === String(castingId); })[0];
         withCasting(c);
+      }).catch(function(err){
+        box.innerHTML = '<p>No se pudo conectar con el servidor. ' + escapeHtml(err.message || '') + '</p>';
       });
     }
   }
@@ -1169,24 +1209,30 @@
   /* ================= LOGIN ================= */
   var loginForm = document.getElementById('loginForm');
   var loginError = document.getElementById('loginError');
+  function setLoginNotice(msg){
+    loginError.textContent = msg;
+    loginError.classList.add('show');
+  }
   loginForm.addEventListener('submit', function(e){
     e.preventDefault();
     var u = document.getElementById('loginUser').value.trim();
     var p = document.getElementById('loginPass').value;
+    loginError.classList.remove('show');
     apiPost('/api/login.php', { usuario: u, password: p }).then(function(res){
       if(res.ok && res.data.ok){
-        loginError.classList.remove('show');
         loginForm.reset();
         location.hash = '#/admin';
       } else {
-        loginError.classList.add('show');
+        setLoginNotice('Usuario o contraseña incorrectos.');
       }
-    }).catch(function(){
-      loginError.classList.add('show');
+    }).catch(function(err){
+      setLoginNotice('No se pudo conectar con el servidor. ' + (err.message || ''));
     });
   });
   document.getElementById('logoutBtn').addEventListener('click', function(){
     apiPost('/api/logout.php', {}).then(function(){
+      location.hash = '#/inicio';
+    }).catch(function(){
       location.hash = '#/inicio';
     });
   });
@@ -1227,6 +1273,8 @@
         statBox(pendCount, 'Candidaturas pendientes') +
         statBox(castPendCount, 'Postulaciones de casting pendientes') +
         statBox(openCastings, 'Castings abiertos');
+    }).catch(function(err){
+      document.getElementById('adminStats').innerHTML = '<div class="stat-box"><div class="n">⚠</div><div class="l">No se pudo conectar con el servidor</div></div>';
     });
 
     renderApplicationsList();
@@ -1277,6 +1325,8 @@
           });
         });
       });
+    }).catch(function(err){
+      container.innerHTML = '<div class="empty-note">No se pudo conectar con el servidor. ' + escapeHtml(err.message || '') + '</div>';
     });
   }
   document.getElementById('filterPosition').addEventListener('change', renderApplicationsList);
@@ -1311,6 +1361,8 @@
           });
         });
       });
+    }).catch(function(err){
+      container.innerHTML = '<div class="empty-note">No se pudo conectar con el servidor. ' + escapeHtml(err.message || '') + '</div>';
     });
   }
 
@@ -1374,6 +1426,8 @@
           });
         });
       });
+    }).catch(function(err){
+      container.innerHTML = '<div class="empty-note">No se pudo conectar con el servidor. ' + escapeHtml(err.message || '') + '</div>';
     });
   }
   document.getElementById('filterCasting').addEventListener('change', renderCastingApplicationsList);
