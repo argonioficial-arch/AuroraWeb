@@ -1,0 +1,29 @@
+# app.yaml — Aurora Films Studios
+#
+# IMPORTANTE: si tu proyecto en Wasmer ya tiene un app.yaml (generado con
+# "wasmer app create" al elegir la plantilla PHP), NO lo reemplaces entero.
+# En su lugar, copia únicamente el bloque "env:" de aquí abajo dentro de tu
+# app.yaml ya existente, y conserva su "kind", "owner", "name" y "package"
+# originales (esos campos dependen del build que genera el CLI y no debo
+# inventarlos yo).
+
+kind: wasmer.io/App.v0
+owner: TU-USUARIO-O-EQUIPO-WASMER
+name: aurora-films-studios
+package: .
+debug: false
+
+env:
+  # --- Base de datos MySQL ---
+  DB_HOST: "db.fr-roub1.bengt.wasmernet.com"
+  DB_PORT: "20184"
+  DB_USER: "user_5f31b59d"
+  DB_PASS: "CAMBIA-ESTA-CONTRASEÑA-Y-PONLA-AQUI"
+  DB_NAME: "aurorafilmsstudios_db"
+
+  # --- Acceso al panel de administración ---
+  ADMIN_USER: "argoni"
+  ADMIN_PASS: "1595"
+  # Cadena aleatoria larga y secreta, distinta de la contraseña del panel.
+  # Se usa para firmar el token de sesión del admin. Cámbiala por la tuya.
+  ADMIN_TOKEN_SECRET: "CAMBIA-ESTO-POR-UNA-CADENA-ALEATORIA-LARGA"

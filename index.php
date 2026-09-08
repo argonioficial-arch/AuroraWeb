@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aurora Films Studios — Cine dentro de Roblox</title>
+<meta name="description" content="Aurora Films Studios graba películas y tráilers dentro de Roblox. Descubre nuestro estudio, únete al equipo o postúlate al casting.">
+<link rel="icon" href="aurora-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#060f0c;
+    --bg-soft:#0b1d18;
+    --panel:#0d221c;
+    --panel-2:#122b24;
+    --amber:#f9a61e;
+    --amber-soft:#fbc356;
+    --orange:#e9650e;
+    --teal:#1e9273;
+    --teal-deep:#0b3f37;
+    --cream:#f3eee3;
+    --cream-dim:#c9cdc4;
+    --muted:#8aa199;
+    --line:rgba(243,238,227,0.12);
+    --line-strong:rgba(243,238,227,0.22);
+    --ok:#3fb87f;
+    --warn:#f2b23a;
+    --bad:#e2543b;
+    --aurora-gradient: linear-gradient(180deg, var(--amber) 0%, var(--orange) 38%, var(--teal) 66%, var(--teal-deep) 100%);
+    --aurora-gradient-h: linear-gradient(90deg, var(--amber) 0%, var(--orange) 38%, var(--teal) 66%, var(--teal-deep) 100%);
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; }
+  }
+  body{
+    background:var(--bg);
+    color:var(--cream);
+    font-family:'Manrope', sans-serif;
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  ::selection{ background:var(--orange); color:var(--bg); }
+  a{ color:inherit; text-decoration:none; }
+  img{ display:block; max-width:100%; }
+  button{ font-family:inherit; cursor:pointer; border:none; background:none; color:inherit; }
+  ul{ list-style:none; }
+  h1,h2,h3,.display{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:800;
+    line-height:0.98;
+    letter-spacing:0.005em;
+  }
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 32px; }
+  body::before{
+    content:"";
+    position:fixed; inset:0; z-index:2; pointer-events:none;
+    opacity:0.045; mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- LOADER ---------- */
+  #loader{
+    position:fixed; inset:0; z-index:1000; background:var(--bg);
+    display:flex; align-items:center; justify-content:center; flex-direction:column; gap:26px;
+    transition:opacity 0.7s ease, visibility 0.7s ease;
+  }
+  #loader.hide{ opacity:0; visibility:hidden; pointer-events:none; }
+  .loader-logo{ width:92px; height:92px; animation:loaderPulse 1.8s ease-in-out infinite; }
+  .loader-logo img{ width:100%; height:100%; object-fit:contain; filter:drop-shadow(0 0 26px rgba(233,101,14,0.35)); }
+  @keyframes loaderPulse{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.06);} }
+  .loader-bar{ width:180px; height:2px; background:rgba(243,238,227,0.14); border-radius:2px; overflow:hidden; }
+  .loader-bar span{ display:block; height:100%; width:0%; background:var(--aurora-gradient-h); animation:loaderFill 1.4s ease forwards; }
+  @keyframes loaderFill{ 0%{width:0%;} 100%{width:100%;} }
+  .loader-label{ font-family:'Big Shoulders Display'; font-weight:700; letter-spacing:0.14em; font-size:12.5px; color:var(--cream-dim); text-transform:uppercase; }
+
+  /* ---------- COOKIE BANNER ---------- */
+  #cookieBanner{
+    position:fixed; left:20px; right:20px; bottom:20px; z-index:900;
+    max-width:640px; margin:0 auto;
+    background:var(--panel); border:1px solid var(--line-strong); border-radius:16px;
+    padding:22px 24px; display:flex; flex-direction:column; gap:14px;
+    box-shadow:0 20px 50px rgba(0,0,0,0.4);
+    transform:translateY(140%); transition:transform 0.5s ease;
+  }
+  #cookieBanner.show{ transform:translateY(0); }
+  #cookieBanner p{ font-size:14px; color:var(--cream-dim); }
+  #cookieBanner a{ color:var(--amber-soft); font-weight:600; }
+  .cookie-actions{ display:flex; gap:10px; flex-wrap:wrap; }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    padding:18px 0; transition:background 0.4s ease, padding 0.4s ease, border-color 0.4s ease;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{ background:rgba(6,15,12,0.9); backdrop-filter:blur(10px); padding:13px 0; border-bottom:1px solid var(--line); }
+  nav{ display:flex; align-items:center; justify-content:space-between; gap:20px; }
+  .brand{ display:flex; align-items:center; gap:11px; }
+  .brand img{ width:30px; height:30px; object-fit:contain; }
+  .brand-name{ font-family:'Big Shoulders Display'; font-weight:800; font-size:16px; letter-spacing:0.03em; text-transform:uppercase; }
+  .nav-links{ display:flex; gap:30px; }
+  .nav-links a{ font-size:14px; font-weight:600; color:var(--cream-dim); transition:color 0.25s ease; position:relative; padding-bottom:3px; }
+  .nav-links a:hover, .nav-links a.active{ color:var(--cream); }
+  .nav-links a::after{ content:""; position:absolute; left:0; bottom:0; width:0%; height:2px; background:var(--aurora-gradient-h); transition:width 0.3s ease; }
+  .nav-links a:hover::after, .nav-links a.active::after{ width:100%; }
+  .nav-cta{ display:inline-flex; align-items:center; gap:8px; padding:10px 20px; border-radius:999px; background:var(--cream); color:var(--bg); font-weight:700; font-size:13.5px; transition:transform 0.25s ease, box-shadow 0.25s ease; white-space:nowrap; }
+  .nav-cta:hover{ transform:translateY(-2px); box-shadow:0 8px 22px rgba(249,166,30,0.22); }
+  .burger{ display:none; width:30px; height:20px; position:relative; }
+  .burger span{ position:absolute; left:0; right:0; height:2px; background:var(--cream); transition:0.3s ease; }
+  .burger span:nth-child(1){ top:0; } .burger span:nth-child(2){ top:9px; } .burger span:nth-child(3){ top:18px; }
+  .burger.open span:nth-child(1){ top:9px; transform:rotate(45deg);} .burger.open span:nth-child(2){ opacity:0;} .burger.open span:nth-child(3){ top:9px; transform:rotate(-45deg);}
+  .mobile-menu{
+    display:none; position:fixed; top:0; right:0; bottom:0; width:80%; max-width:340px;
+    background:var(--bg-soft); z-index:99; padding:100px 30px 40px;
+    transform:translateX(100%); transition:transform 0.4s ease; border-left:1px solid var(--line); overflow-y:auto;
+  }
+  .mobile-menu.open{ transform:translateX(0); }
+  .mobile-menu ul{ display:flex; flex-direction:column; gap:22px; }
+  .mobile-menu a{ font-family:'Big Shoulders Display'; font-size:22px; font-weight:700; text-transform:uppercase; }
+  .mobile-menu .mm-sep{ border-top:1px solid var(--line); margin:6px 0; }
+  @media (max-width:900px){ .nav-links, .nav-cta.desktop-only{ display:none; } .burger{ display:block; } .mobile-menu{ display:block; } }
+
+  main{ padding-top:0; }
+  .view{ display:none; }
+  .view.active{ display:block; }
+
+  /* ---------- HERO ---------- */
+  .hero{ position:relative; min-height:96vh; display:flex; align-items:center; padding-top:120px; overflow:hidden; }
+  .hero-wave{ position:absolute; right:-8%; top:-8%; width:60%; height:120%; opacity:0.85; z-index:0; pointer-events:none; }
+  .hero-wave svg{ width:100%; height:100%; }
+  .hero-glow{ position:absolute; inset:0; z-index:0;
+    background:radial-gradient(ellipse 60% 50% at 78% 30%, rgba(233,101,14,0.14), transparent 60%),
+               radial-gradient(ellipse 50% 60% at 85% 80%, rgba(30,146,115,0.18), transparent 65%); }
+  .hero-content{ position:relative; z-index:1; max-width:680px; }
+  .hero-badge{ display:inline-flex; align-items:center; gap:9px; padding:8px 16px 8px 10px; border:1px solid var(--line); border-radius:999px; font-size:13px; font-weight:600; color:var(--cream-dim); margin-bottom:26px; background:rgba(243,238,227,0.03); }
+  .hero-badge .dot{ width:8px; height:8px; border-radius:50%; background:var(--aurora-gradient-h); }
+  .hero h1{ font-size:clamp(2.7rem, 6.6vw, 5.2rem); text-transform:uppercase; margin-bottom:24px; }
+  .hero h1 .grad{ background:var(--aurora-gradient-h); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .hero p{ font-size:17.5px; color:var(--cream-dim); max-width:480px; margin-bottom:36px; }
+  .hero-actions{ display:flex; gap:16px; flex-wrap:wrap; }
+  .btn{ display:inline-flex; align-items:center; gap:9px; padding:15px 28px; border-radius:999px; font-weight:700; font-size:14.5px; transition:transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease; }
+  .btn-primary{ background:var(--aurora-gradient-h); color:#0a1512; }
+  .btn-primary:hover{ transform:translateY(-2px); box-shadow:0 10px 30px rgba(233,101,14,0.28); }
+  .btn-ghost{ border:1px solid var(--line); color:var(--cream); }
+  .btn-ghost:hover{ background:rgba(243,238,227,0.06); transform:translateY(-2px); }
+  .btn-sm{ padding:10px 18px; font-size:13.5px; border-radius:999px; }
+  .btn-outline-ok{ border:1px solid rgba(63,184,127,0.5); color:var(--ok); }
+  .btn-outline-ok:hover{ background:rgba(63,184,127,0.1); }
+  .btn-outline-bad{ border:1px solid rgba(226,84,59,0.5); color:var(--bad); }
+  .btn-outline-bad:hover{ background:rgba(226,84,59,0.1); }
+  .btn-block{ width:100%; justify-content:center; }
+  .hero-scroll{ position:absolute; bottom:34px; left:32px; display:flex; align-items:center; gap:10px; font-size:12.5px; color:var(--muted); z-index:1; }
+  .hero-scroll .line{ width:28px; height:1px; background:var(--muted); }
+
+  section{ position:relative; padding:110px 0; }
+  .section-head{ display:flex; justify-content:space-between; align-items:flex-end; gap:40px; margin-bottom:52px; flex-wrap:wrap; }
+  .kicker{ font-size:13.5px; font-weight:700; color:var(--orange); margin-bottom:10px; text-transform:uppercase; letter-spacing:0.02em; }
+  .section-head h2{ font-size:clamp(2rem, 4.2vw, 3.2rem); text-transform:uppercase; }
+  .section-head p{ max-width:360px; color:var(--cream-dim); font-size:15.5px; }
+
+  /* ---------- TRAILER (link-out) ---------- */
+  .trailer{ background:var(--bg-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .player{ display:block; position:relative; aspect-ratio:16/9; border-radius:18px; overflow:hidden; border:1px solid var(--line); background:linear-gradient(160deg, #0f2a24, #081713); }
+  .skyline{ position:absolute; bottom:0; left:0; right:0; height:62%; opacity:0.9; }
+  .skyline svg{ width:100%; height:100%; display:block; }
+  .player-overlay-grad{ position:absolute; inset:0; background:linear-gradient(180deg, rgba(6,15,12,0) 0%, rgba(6,15,12,0.55) 72%, rgba(6,15,12,0.88) 100%); }
+  .player-link{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column; gap:16px; }
+  .play-btn{ position:relative; z-index:2; width:80px; height:80px; border-radius:50%; background:var(--cream); display:flex; align-items:center; justify-content:center; transition:transform 0.3s ease; }
+  .player-link:hover .play-btn{ transform:scale(1.08); }
+  .play-btn svg{ width:24px; height:24px; margin-left:4px; }
+  .player-yt-label{ position:relative; z-index:2; display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:700; color:var(--cream); background:rgba(6,15,12,0.55); border:1px solid var(--line-strong); padding:8px 16px; border-radius:999px; }
+  .player-caption{ position:absolute; left:26px; bottom:22px; z-index:2; }
+  .player-caption .tag{ font-size:12.5px; font-weight:700; color:var(--amber-soft); margin-bottom:6px; }
+  .player-caption h3{ font-size:26px; font-weight:700; text-transform:none; }
+  .trailer-meta{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:28px; margin-top:38px; }
+  .trailer-meta div{ border-top:1px solid var(--line); padding-top:16px; }
+  .trailer-meta .label{ font-size:12.5px; color:var(--muted); margin-bottom:6px; }
+  .trailer-meta .val{ font-size:16px; font-weight:700; }
+  @media (max-width:720px){ .trailer-meta{ grid-template-columns:1fr; } }
+
+  /* ---------- SERVICES ---------- */
+  .services-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:18px; overflow:hidden; }
+  .service-card{ background:var(--bg); padding:38px 30px; transition:background 0.3s ease; }
+  .service-card:hover{ background:var(--panel); }
+  .service-num{ font-family:'Big Shoulders Display'; font-size:14px; font-weight:700; color:var(--muted); margin-bottom:24px; text-transform:uppercase; }
+  .service-card h3{ font-size:22px; text-transform:none; margin-bottom:12px; font-weight:700; }
+  .service-card p{ color:var(--cream-dim); font-size:15px; }
+  @media (max-width:860px){ .services-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- PROCESS ---------- */
+  .process{ background:var(--bg-soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line); }
+  .process-row{ display:grid; grid-template-columns:86px 1fr 1fr; gap:32px; align-items:center; padding:30px 0; border-top:1px solid var(--line); }
+  .process-row:last-child{ border-bottom:1px solid var(--line); }
+  .process-index{ font-family:'Big Shoulders Display'; font-size:42px; font-weight:800; background:var(--aurora-gradient-h); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .process-row h3{ font-size:21px; text-transform:none; font-weight:700; }
+  .process-row p{ color:var(--cream-dim); font-size:15px; }
+  @media (max-width:720px){ .process-row{ grid-template-columns:50px 1fr; } .process-row p{ grid-column:2; } }
+
+  /* ---------- PROJECTS ---------- */
+  .projects-grid{ display:grid; grid-template-columns:repeat(3, 1fr); gap:20px; }
+  .project-card{ border-radius:16px; border:1px solid var(--line); overflow:hidden; background:var(--panel); }
+  .project-thumb{ aspect-ratio:4/3; position:relative; display:flex; align-items:flex-end; padding:20px; }
+  .project-thumb.live{ background:var(--aurora-gradient); }
+  .project-thumb.soon{ background:repeating-linear-gradient(135deg, rgba(243,238,227,0.05) 0 2px, transparent 2px 14px); background-color:#0c231d; display:flex; align-items:center; justify-content:center; padding:0; }
+  .project-thumb.live span{ font-family:'Big Shoulders Display'; font-weight:800; font-size:14px; color:#0a1512; background:rgba(243,238,227,0.85); padding:6px 12px; border-radius:999px; }
+  .project-thumb.soon span{ font-size:13px; color:var(--muted); font-weight:600; }
+  .project-info{ padding:22px; }
+  .project-info h3{ font-size:18px; text-transform:none; font-weight:700; margin-bottom:6px; }
+  .project-info p{ font-size:13.5px; color:var(--muted); }
+  @media (max-width:860px){ .projects-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- JOIN teaser (home) ---------- */
+  .join{ border-top:1px solid var(--line); }
+  .join-inner{ display:flex; justify-content:space-between; align-items:center; gap:40px; flex-wrap:wrap; }
+  .join h2{ font-size:clamp(2rem, 4.6vw, 3.2rem); max-width:560px; text-transform:uppercase; }
+  .join p{ color:var(--cream-dim); max-width:420px; margin-top:16px; font-size:15.5px; }
+
+  /* ---------- GENERIC SUB-PAGE HEADER ---------- */
+  .page-hero{ padding:170px 0 70px; border-bottom:1px solid var(--line); background:var(--bg-soft); }
+  .page-hero .kicker{ margin-bottom:14px; }
+  .page-hero h1{ font-size:clamp(2.2rem, 5vw, 3.6rem); text-transform:uppercase; margin-bottom:16px; }
+  .page-hero p{ color:var(--cream-dim); max-width:560px; font-size:16px; }
+  .back-link{ display:inline-flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:var(--cream-dim); margin-bottom:22px; }
+  .back-link:hover{ color:var(--cream); }
+
+  /* ---------- JOBS ---------- */
+  .jobs-grid{ display:grid; grid-template-columns:repeat(2, 1fr); gap:16px; padding:70px 0; }
+  .job-card{ border:1px solid var(--line); border-radius:16px; padding:28px; background:var(--panel); display:flex; flex-direction:column; gap:14px; transition:border-color 0.25s ease, transform 0.25s ease; }
+  .job-card:hover{ border-color:var(--line-strong); transform:translateY(-3px); }
+  .job-card h3{ font-size:21px; text-transform:none; font-weight:700; }
+  .job-card p{ font-size:14.5px; color:var(--cream-dim); flex:1; }
+  .job-card .btn{ align-self:flex-start; }
+  @media (max-width:800px){ .jobs-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- FORMS ---------- */
+  .form-box{ max-width:640px; padding:60px 0 100px; }
+  .form-title{ font-size:clamp(1.8rem,4vw,2.6rem); text-transform:uppercase; margin-bottom:10px; }
+  .form-sub{ color:var(--cream-dim); font-size:15px; margin-bottom:36px; }
+  .field{ margin-bottom:20px; }
+  .field label{ display:block; font-size:13.5px; font-weight:700; color:var(--cream-dim); margin-bottom:8px; }
+  .field .hint{ font-size:12.5px; color:var(--muted); margin-top:6px; }
+  .field input, .field select, .field textarea{
+    width:100%; background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:13px 15px; color:var(--cream); font-family:inherit; font-size:14.5px; transition:border-color 0.2s ease, background 0.2s ease;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus{ outline:none; border-color:var(--amber); background:var(--panel-2); }
+  .field textarea{ min-height:110px; resize:vertical; }
+  .field-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:640px){ .field-row{ grid-template-columns:1fr; } }
+  .checkbox-field{ display:flex; align-items:flex-start; gap:10px; margin:26px 0; }
+  .checkbox-field input{ width:auto; margin-top:3px; accent-color:var(--orange); }
+  .checkbox-field label{ font-size:13.5px; color:var(--cream-dim); font-weight:500; }
+  .checkbox-field a{ color:var(--amber-soft); font-weight:600; }
+  .form-success{ border:1px solid rgba(63,184,127,0.4); background:rgba(63,184,127,0.08); border-radius:14px; padding:30px; text-align:left; }
+  .form-success h3{ font-size:22px; text-transform:none; color:var(--ok); margin-bottom:10px; }
+  .form-success p{ color:var(--cream-dim); font-size:14.5px; margin-bottom:20px; }
+  .form-error{ font-size:13.5px; color:var(--bad); margin-bottom:16px; display:none; }
+  .form-error.show{ display:block; }
+
+  /* ---------- CASTING ---------- */
+  .casting-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; padding:70px 0; }
+  .casting-card{ border:1px solid var(--line); border-radius:16px; padding:28px; background:var(--panel); display:flex; flex-direction:column; gap:12px; }
+  .casting-card h3{ font-size:21px; text-transform:none; font-weight:700; }
+  .casting-card p{ font-size:14.5px; color:var(--cream-dim); flex:1; }
+  .badge{ display:inline-flex; align-items:center; gap:6px; font-size:12px; font-weight:700; padding:5px 12px; border-radius:999px; width:fit-content; text-transform:uppercase; letter-spacing:0.02em; }
+  .badge.open{ background:rgba(63,184,127,0.14); color:var(--ok); }
+  .badge.closed{ background:rgba(138,161,153,0.14); color:var(--muted); }
+  .badge.pending{ background:rgba(242,178,58,0.16); color:var(--warn); }
+  .badge.accepted{ background:rgba(63,184,127,0.16); color:var(--ok); }
+  .badge.rejected{ background:rgba(226,84,59,0.16); color:var(--bad); }
+  .casting-empty{ padding:60px 0; text-align:center; color:var(--muted); font-size:15px; }
+  @media (max-width:800px){ .casting-grid{ grid-template-columns:1fr; } }
+
+  /* ---------- LOGIN ---------- */
+  .login-box{ max-width:400px; margin:0 auto; padding:150px 0 140px; text-align:center; }
+  .login-box .login-icon{ width:52px; height:52px; margin:0 auto 22px; border-radius:14px; background:var(--aurora-gradient); display:flex; align-items:center; justify-content:center; }
+  .login-box .login-icon svg{ width:24px; height:24px; color:#0a1512; }
+  .login-box h1{ font-size:2rem; text-transform:uppercase; margin-bottom:10px; }
+  .login-box p.sub{ color:var(--cream-dim); font-size:14.5px; margin-bottom:34px; }
+  .login-form{ text-align:left; }
+
+  /* ---------- ADMIN ---------- */
+  .admin-shell{ padding:150px 0 100px; }
+  .admin-head{ display:flex; justify-content:space-between; align-items:center; gap:20px; flex-wrap:wrap; margin-bottom:40px; }
+  .admin-head h1{ font-size:2.1rem; text-transform:uppercase; }
+  .admin-tabs{ display:flex; gap:10px; border-bottom:1px solid var(--line); margin-bottom:34px; }
+  .admin-tab{ padding:12px 4px; font-size:14px; font-weight:700; color:var(--muted); border-bottom:2px solid transparent; margin-right:24px; transition:color 0.2s ease, border-color 0.2s ease; }
+  .admin-tab.active{ color:var(--cream); border-color:var(--orange); }
+  .admin-panel{ display:none; }
+  .admin-panel.active{ display:block; }
+  .admin-toolbar{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; margin-bottom:26px; }
+  .admin-toolbar select{ background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:9px 12px; color:var(--cream); font-size:13.5px; }
+  .stat-row{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:34px; }
+  .stat-box{ border:1px solid var(--line); border-radius:14px; padding:18px 20px; background:var(--panel); }
+  .stat-box .n{ font-family:'Big Shoulders Display'; font-size:30px; font-weight:800; }
+  .stat-box .l{ font-size:12.5px; color:var(--muted); }
+  @media (max-width:800px){ .stat-row{ grid-template-columns:repeat(2,1fr); } }
+
+  .app-card{ border:1px solid var(--line); border-radius:14px; padding:22px 24px; background:var(--panel); margin-bottom:14px; }
+  .app-card-top{ display:flex; justify-content:space-between; align-items:flex-start; gap:16px; flex-wrap:wrap; margin-bottom:10px; }
+  .app-card-top h4{ font-size:17px; font-weight:700; }
+  .app-card-meta{ font-size:12.5px; color:var(--muted); margin-top:3px; }
+  .app-card-body{ font-size:14px; color:var(--cream-dim); margin:14px 0; display:grid; grid-template-columns:1fr 1fr; gap:10px 24px; }
+  .app-card-body .k{ color:var(--muted); font-size:12px; text-transform:uppercase; margin-bottom:3px; }
+  .app-card-body .full{ grid-column:1/-1; }
+  .app-card-actions{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  @media (max-width:640px){ .app-card-body{ grid-template-columns:1fr; } }
+
+  .casting-manage-item{ display:flex; justify-content:space-between; align-items:center; gap:16px; border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin-bottom:10px; flex-wrap:wrap; background:var(--panel); }
+  .casting-manage-item .info h4{ font-size:16px; font-weight:700; margin-bottom:3px; }
+  .casting-manage-item .info p{ font-size:13px; color:var(--muted); }
+  .casting-manage-actions{ display:flex; gap:10px; align-items:center; }
+
+  .new-casting-box{ border:1px dashed var(--line-strong); border-radius:14px; padding:22px; margin-bottom:30px; }
+  .new-casting-box h4{ font-size:15px; margin-bottom:16px; text-transform:uppercase; letter-spacing:0.02em; color:var(--cream-dim); }
+  .empty-note{ color:var(--muted); font-size:14px; padding:20px 0; }
+
+  /* ---------- LEGAL PAGES ---------- */
+  .legal{ padding:150px 0 100px; }
+  .legal h1{ font-size:clamp(2rem,4.4vw,2.8rem); text-transform:uppercase; margin-bottom:8px; }
+  .legal .updated{ color:var(--muted); font-size:13px; margin-bottom:40px; }
+  .legal h2{ font-size:20px; text-transform:none; margin:36px 0 12px; font-weight:700; }
+  .legal p, .legal li{ color:var(--cream-dim); font-size:15px; margin-bottom:12px; }
+  .legal ul{ padding-left:20px; list-style:disc; }
+  .legal strong{ color:var(--cream); }
+  .legal-nav{ display:flex; gap:20px; margin-bottom:10px; flex-wrap:wrap; }
+  .legal-nav a{ font-size:13.5px; font-weight:600; color:var(--amber-soft); }
+
+  /* ---------- JOIN CTA (jobs/casting pages footer) ---------- */
+  .info-cta{ border-top:1px solid var(--line); padding:70px 0; text-align:center; }
+  .info-cta h2{ font-size:clamp(1.8rem,4vw,2.6rem); text-transform:uppercase; margin-bottom:14px; }
+  .info-cta p{ color:var(--cream-dim); max-width:480px; margin:0 auto 26px; font-size:15px; }
+
+  /* ---------- FOOTER ---------- */
+  footer{ border-top:1px solid var(--line); padding:60px 0 30px; }
+  .footer-top{ display:flex; justify-content:space-between; gap:40px; flex-wrap:wrap; margin-bottom:48px; }
+  .footer-brand{ display:flex; align-items:center; gap:12px; }
+  .footer-brand img{ width:28px; height:28px; }
+  .footer-brand span{ font-family:'Big Shoulders Display'; font-weight:800; font-size:15px; text-transform:uppercase; }
+  .footer-cols{ display:flex; gap:56px; flex-wrap:wrap; }
+  .footer-col h4{ font-size:12.5px; color:var(--muted); margin-bottom:14px; font-weight:700; text-transform:uppercase; }
+  .footer-col ul{ display:flex; flex-direction:column; gap:10px; }
+  .footer-col a{ font-size:14px; color:var(--cream-dim); transition:color 0.2s ease; }
+  .footer-col a:hover{ color:var(--cream); }
+  .footer-bottom{ display:flex; justify-content:space-between; align-items:center; gap:16px; flex-wrap:wrap; padding-top:26px; border-top:1px solid var(--line); font-size:12.5px; color:var(--muted); }
+  .socials{ display:flex; gap:12px; }
+  .socials a{ width:34px; height:34px; border:1px solid var(--line); border-radius:50%; display:flex; align-items:center; justify-content:center; transition:border-color 0.2s ease, transform 0.2s ease; }
+  .socials a:hover{ border-color:var(--orange); transform:translateY(-2px); }
+  .socials svg{ width:15px; height:15px; }
+
+  :focus-visible{ outline:2px solid var(--amber-soft); outline-offset:3px; }
+</style>
+</head>
+<body>
+
+  <!-- LOADER -->
+  <div id="loader">
+    <div class="loader-logo"><img src="aurora-logo.png" alt=""></div>
+    <div class="loader-bar"><span></span></div>
+    <div class="loader-label">Aurora Films Studios</div>
+  </div>
+
+  <!-- COOKIE BANNER -->
+  <div id="cookieBanner">
+    <p>Usamos almacenamiento local estrictamente necesario para recordar tu sesión y tus preferencias en este sitio. No utilizamos cookies de publicidad ni de seguimiento de terceros. Consulta nuestra <a href="#/cookies">Política de Cookies</a>.</p>
+    <div class="cookie-actions">
+      <button class="btn btn-primary btn-sm" id="cookieAccept">Aceptar</button>
+      <button class="btn btn-ghost btn-sm" id="cookieReject">Rechazar no esenciales</button>
+    </div>
+  </div>
+
+  <!-- MOBILE MENU -->
+  <div class="mobile-menu" id="mobileMenu">
+    <ul>
+      <li><a href="#/inicio">Inicio</a></li>
+      <li><a href="#/inicio#trailer">Tráiler</a></li>
+      <li><a href="#/inicio#estudio">Estudio</a></li>
+      <li><a href="#/trabajo">Trabaja con nosotros</a></li>
+      <li><a href="#/casting">Casting</a></li>
+      <li class="mm-sep"></li>
+      <li><a href="#/login" style="font-size:15px;">Acceso del equipo</a></li>
+    </ul>
+  </div>
+
+  <!-- HEADER -->
+  <header id="siteHeader">
+    <div class="wrap">
+      <nav>
+        <a href="#/inicio" class="brand">
+          <img src="aurora-logo.png" alt="Aurora Films Studios">
+          <span class="brand-name">Aurora Films Studios</span>
+        </a>
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#/inicio" data-route="inicio">Inicio</a></li>
+          <li><a href="#/inicio#estudio" data-route="inicio">Estudio</a></li>
+          <li><a href="#/trabajo" data-route="trabajo">Trabaja con nosotros</a></li>
+          <li><a href="#/casting" data-route="casting">Casting</a></li>
+        </ul>
+        <a href="#/login" class="nav-cta desktop-only">Acceso del equipo</a>
+        <button class="burger" id="burger" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+
+  <!-- ============ VIEW: INICIO ============ -->
+  <div class="view active" id="view-inicio">
+
+    <section class="hero" id="top">
+      <div class="hero-glow"></div>
+      <div class="hero-wave">
+        <svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+          <defs>
+            <linearGradient id="heroGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f9a61e"/>
+              <stop offset="38%" stop-color="#e9650e"/>
+              <stop offset="66%" stop-color="#1e9273"/>
+              <stop offset="100%" stop-color="#0b3f37"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#heroGrad)" opacity="0.5" d="M120 480 C90 480 90 420 130 400 C200 365 210 300 210 250 C210 160 280 90 360 90 L360 480 Z"/>
+        </svg>
+      </div>
+      <div class="wrap">
+        <div class="hero-content">
+          <div class="hero-badge"><span class="dot"></span>Estudio de cine en Roblox</div>
+          <h1>Hacemos <span class="grad">cine</span> dentro de Roblox</h1>
+          <p>Aurora Films Studios graba películas y tráilers dentro de Roblox con la mirada, el encuadre y el color de un estudio de cine real. Nuestra primera producción: el tráiler de Madrid RP ESP.</p>
+          <div class="hero-actions">
+            <a href="#trailer" class="btn btn-primary">Ver el tráiler</a>
+            <a href="#/trabajo" class="btn btn-ghost">Trabaja con nosotros</a>
+          </div>
+        </div>
+      </div>
+      <div class="hero-scroll"><span class="line"></span>Desplázate</div>
+    </section>
+
+    <section class="trailer" id="trailer">
+      <div class="wrap">
+        <div class="section-head">
+          <div>
+            <div class="kicker">Nuestro primer tráiler</div>
+            <h2>Madrid RP ESP</h2>
+          </div>
+          <p>Un vistazo cinemático a las calles de Madrid RP ESP, rodado íntegramente dentro de Roblox. El tráiler se aloja en nuestro canal de YouTube.</p>
+        </div>
+
+        <a class="player" id="ytPlayerLink" href="https://www.youtube.com/watch?v=VIDEO_ID" target="_blank" rel="noopener">
+          <div class="skyline">
+            <svg viewBox="0 0 1200 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#e9650e"/>
+                  <stop offset="55%" stop-color="#1e9273"/>
+                  <stop offset="100%" stop-color="#0b3f37"/>
+                </linearGradient>
+              </defs>
+              <rect x="0" y="120" width="60" height="180" fill="url(#skyGrad)" opacity="0.55"/>
+              <rect x="70" y="80" width="90" height="220" fill="url(#skyGrad)" opacity="0.7"/>
+              <rect x="170" y="150" width="50" height="150" fill="url(#skyGrad)" opacity="0.5"/>
+              <rect x="230" y="60" width="70" height="240" fill="url(#skyGrad)" opacity="0.75"/>
+              <rect x="310" y="110" width="100" height="190" fill="url(#skyGrad)" opacity="0.6"/>
+              <rect x="420" y="40" width="60" height="260" fill="url(#skyGrad)" opacity="0.85"/>
+              <rect x="490" y="95" width="80" height="205" fill="url(#skyGrad)" opacity="0.6"/>
+              <rect x="580" y="130" width="55" height="170" fill="url(#skyGrad)" opacity="0.5"/>
+              <rect x="645" y="70" width="90" height="230" fill="url(#skyGrad)" opacity="0.75"/>
+              <rect x="745" y="110" width="65" height="190" fill="url(#skyGrad)" opacity="0.6"/>
+              <rect x="820" y="30" width="60" height="270" fill="url(#skyGrad)" opacity="0.9"/>
+              <rect x="890" y="100" width="95" height="200" fill="url(#skyGrad)" opacity="0.6"/>
+              <rect x="995" y="150" width="55" height="150" fill="url(#skyGrad)" opacity="0.5"/>
+              <rect x="1060" y="85" width="80" height="215" fill="url(#skyGrad)" opacity="0.7"/>
+              <rect x="1150" y="130" width="50" height="170" fill="url(#skyGrad)" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="player-overlay-grad"></div>
+          <div class="player-caption">
+            <div class="tag">01 — Tráiler oficial</div>
+            <h3>Madrid RP ESP</h3>
+          </div>
+          <div class="player-link">
+            <span class="play-btn"><svg viewBox="0 0 24 24" fill="#0a1512"><path d="M8 5v14l11-7z"/></svg></span>
+            <span class="player-yt-label">
+              <svg viewBox="0 0 24 24" fill="currentColor" style="width:14px;height:14px;"><path d="M23 12s0-3.2-.4-4.7a3 3 0 0 0-2.1-2.1C18.9 4.7 12 4.7 12 4.7s-6.9 0-8.5.5A3 3 0 0 0 1.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a3 3 0 0 0 2.1 2.1c1.6.5 8.5.5 8.5.5s6.9 0 8.5-.5a3 3 0 0 0 2.1-2.1c.4-1.5.4-4.7.4-4.7ZM9.8 15.3V8.7l5.7 3.3-5.7 3.3Z"/></svg>
+              Ver en YouTube
+            </span>
+          </div>
+        </a>
+
+        <div class="trailer-meta">
+          <div><div class="label">Producción</div><div class="val">Aurora Films Studios</div></div>
+          <div><div class="label">Rodado en</div><div class="val">Roblox</div></div>
+          <div><div class="label">Servidor</div><div class="val">Madrid RP ESP</div></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="estudio">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">El estudio</div><h2>Qué hacemos</h2></div>
+          <p>Producimos contenido cinemático para la comunidad de Roblox, del guion al estreno.</p>
+        </div>
+        <div class="services-grid">
+          <div class="service-card">
+            <div class="service-num">Películas</div>
+            <h3>Cortometrajes narrativos</h3>
+            <p>Historias con guion, actores y dirección, rodadas por completo dentro de Roblox.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-num">Tráilers</div>
+            <h3>Piezas promocionales</h3>
+            <p>Tráilers para servidores y comunidades que quieren presentar su mundo con impacto.</p>
+          </div>
+          <div class="service-card">
+            <div class="service-num">Roleplay</div>
+            <h3>Producciones para RP</h3>
+            <p>Contenido cinemático a medida para servidores de rol: intros, escenas y cápsulas de historia.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="process">
+      <div class="wrap">
+        <div class="section-head"><div><div class="kicker">Cómo trabajamos</div><h2>De la idea a la pantalla</h2></div></div>
+        <div class="process-list">
+          <div class="process-row"><div class="process-index">01</div><h3>Guion y localizaciones</h3><p>Definimos la historia, los personajes y buscamos los mejores escenarios dentro de Roblox.</p></div>
+          <div class="process-row"><div class="process-index">02</div><h3>Grabación en Roblox</h3><p>Rodamos con cámaras y encuadres pensados como en un set de rodaje real.</p></div>
+          <div class="process-row"><div class="process-index">03</div><h3>Montaje y color</h3><p>Editamos, sonorizamos y aplicamos el tratamiento de color propio de Aurora Films.</p></div>
+          <div class="process-row"><div class="process-index">04</div><h3>Estreno y difusión</h3><p>Publicamos la pieza final y la acompañamos en su lanzamiento junto a la comunidad.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="proyectos">
+      <div class="wrap">
+        <div class="section-head">
+          <div><div class="kicker">Filmografía</div><h2>Proyectos</h2></div>
+          <p>Nuestro primer trabajo ya está fuera. Hay más en camino.</p>
+        </div>
+        <div class="projects-grid">
+          <div class="project-card">
+            <div class="project-thumb live"><span>Disponible</span></div>
+            <div class="project-info"><h3>Madrid RP ESP</h3><p>Tráiler oficial · en YouTube</p></div>
+          </div>
+          <div class="project-card">
+            <div class="project-thumb soon"><span>En producción</span></div>
+            <div class="project-info"><h3>Próximo proyecto</h3><p>Guardamos el título para el estreno</p></div>
+          </div>
+          <div class="project-card">
+            <div class="project-thumb soon"><span>En guion</span></div>
+            <div class="project-info"><h3>Próximo proyecto</h3><p>Anunciamos pronto</p></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="join">
+      <div class="wrap join-inner">
+        <div>
+          <h2>¿Quieres rodar con nosotros?</h2>
+          <p>Buscamos guionistas, cámaras, editores y más perfiles de la comunidad de Roblox para crecer el catálogo de Aurora Films Studios.</p>
+        </div>
+        <a href="#/trabajo" class="btn btn-primary">Ver puestos abiertos</a>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ============ VIEW: TRABAJO (listado de puestos) ============ -->
+  <div class="view" id="view-trabajo">
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="kicker">Bolsa de trabajo</div>
+        <h1>Trabaja en Aurora Films</h1>
+        <p>Formamos equipos de producción para cada proyecto. Elige un puesto y cuéntanos por qué encajas.</p>
+      </div>
+    </section>
+    <section style="padding:0;">
+      <div class="wrap">
+        <div class="jobs-grid" id="jobsGrid"></div>
+      </div>
+    </section>
+    <section class="info-cta">
+      <div class="wrap">
+        <h2>¿Prefieres actuar?</h2>
+        <p>Si lo tuyo es interpretar, visita la zona de casting y postúlate a un papel de nuestra próxima producción.</p>
+        <a href="#/casting" class="btn btn-ghost">Ir a casting</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ VIEW: TRABAJO - FORM (aplicación a un puesto) ============ -->
+  <div class="view" id="view-trabajo-form">
+    <section class="page-hero" style="padding-bottom:0; border-bottom:none;">
+      <div class="wrap">
+        <a href="#/trabajo" class="back-link">&larr; Volver a los puestos</a>
+      </div>
+    </section>
+    <section style="padding-top:30px;">
+      <div class="wrap">
+        <div class="form-box" id="jobFormBox"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ VIEW: CASTING (listado) ============ -->
+  <div class="view" id="view-casting">
+    <section class="page-hero">
+      <div class="wrap">
+        <div class="kicker">Casting abierto</div>
+        <h1>Postúlate para actuar</h1>
+        <p>Estos son los papeles disponibles para nuestras próximas producciones. Cada casting se gestiona y se cierra desde nuestro equipo de dirección.</p>
+      </div>
+    </section>
+    <section style="padding:0;">
+      <div class="wrap">
+        <div class="casting-grid" id="castingGrid"></div>
+      </div>
+    </section>
+    <section class="info-cta">
+      <div class="wrap">
+        <h2>¿Prefieres trabajar detrás de cámara?</h2>
+        <p>Consulta la bolsa de trabajo de Aurora Films: guion, edición, cámara, vestuario, arte y producción.</p>
+        <a href="#/trabajo" class="btn btn-ghost">Ver puestos</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ VIEW: CASTING - FORM (postulación a un personaje) ============ -->
+  <div class="view" id="view-casting-form">
+    <section class="page-hero" style="padding-bottom:0; border-bottom:none;">
+      <div class="wrap">
+        <a href="#/casting" class="back-link">&larr; Volver al casting</a>
+      </div>
+    </section>
+    <section style="padding-top:30px;">
+      <div class="wrap">
+        <div class="form-box" id="castingFormBox"></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ VIEW: LOGIN ============ -->
+  <div class="view" id="view-login">
+    <div class="wrap">
+      <div class="login-box">
+        <div class="login-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        </div>
+        <h1>Acceso del equipo</h1>
+        <p class="sub">Panel privado para revisar candidaturas y casting. Solo para el equipo de dirección de Aurora Films Studios.</p>
+        <form class="login-form" id="loginForm">
+          <div class="form-error" id="loginError">Usuario o contraseña incorrectos.</div>
+          <div class="field">
+            <label for="loginUser">Usuario</label>
+            <input type="text" id="loginUser" autocomplete="username" required>
+          </div>
+          <div class="field">
+            <label for="loginPass">Contraseña</label>
+            <input type="password" id="loginPass" autocomplete="current-password" required>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Entrar al panel</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ VIEW: ADMIN ============ -->
+  <div class="view" id="view-admin">
+    <section class="admin-shell">
+      <div class="wrap">
+        <div class="admin-head">
+          <h1>Panel de dirección</h1>
+          <button class="btn btn-ghost btn-sm" id="logoutBtn">Cerrar sesión</button>
+        </div>
+
+        <div class="stat-row" id="adminStats"></div>
+
+        <div class="admin-tabs">
+          <button class="admin-tab active" data-tab="candidaturas">Candidaturas</button>
+          <button class="admin-tab" data-tab="casting">Casting</button>
+        </div>
+
+        <div class="admin-panel active" id="panel-candidaturas">
+          <div class="admin-toolbar">
+            <select id="filterPosition"></select>
+            <select id="filterStatus">
+              <option value="todos">Todos los estados</option>
+              <option value="pendiente">Pendientes</option>
+              <option value="aceptado">Aceptadas</option>
+              <option value="rechazado">Rechazadas</option>
+            </select>
+          </div>
+          <div id="applicationsList"></div>
+        </div>
+
+        <div class="admin-panel" id="panel-casting">
+          <div class="new-casting-box">
+            <h4>Nuevo casting</h4>
+            <form id="newCastingForm">
+              <div class="field-row">
+                <div class="field"><label for="ncTitle">Personaje / papel</label><input type="text" id="ncTitle" required placeholder="Ej. Protagonista — Carlos"></div>
+                <div class="field"><label for="ncDesc">Descripción breve</label><input type="text" id="ncDesc" required placeholder="Ej. Vecino del barrio, 20-30 años"></div>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm">Añadir casting</button>
+            </form>
+          </div>
+
+          <h4 style="font-size:15px; text-transform:uppercase; letter-spacing:0.02em; color:var(--cream-dim); margin-bottom:16px;">Castings activos</h4>
+          <div id="castingManageList" style="margin-bottom:44px;"></div>
+
+          <h4 style="font-size:15px; text-transform:uppercase; letter-spacing:0.02em; color:var(--cream-dim); margin-bottom:16px;">Postulaciones de casting</h4>
+          <div class="admin-toolbar">
+            <select id="filterCasting"></select>
+            <select id="filterCastingStatus">
+              <option value="todos">Todos los estados</option>
+              <option value="pendiente">Pendientes</option>
+              <option value="aceptado">Aceptadas</option>
+              <option value="rechazado">Rechazadas</option>
+            </select>
+          </div>
+          <div id="castingApplicationsList"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ VIEW: PRIVACIDAD ============ -->
+  <div class="view" id="view-privacidad">
+    <section class="legal">
+      <div class="wrap">
+        <div class="legal-nav"><a href="#/inicio">Inicio</a><a href="#/cookies">Política de cookies</a></div>
+        <h1>Política de privacidad</h1>
+        <div class="updated">Última actualización: septiembre de 2026</div>
+
+        <h2>1. Responsable</h2>
+        <p>Aurora Films Studios es una producción independiente de contenido cinemático para la plataforma Roblox. A efectos de esta política, actuamos como responsables del tratamiento de los datos que nos facilitas a través de este sitio web, en particular mediante los formularios de candidatura laboral y de casting.</p>
+
+        <h2>2. Qué datos recogemos</h2>
+        <ul>
+          <li>Datos identificativos: nombre, edad, usuario de Roblox y usuario de Discord.</li>
+          <li>Datos de la candidatura: puesto o papel solicitado, experiencia previa, disponibilidad, enlaces a portfolio o vídeos de audición y motivación aportada.</li>
+          <li>No solicitamos datos económicos, ni categorías especiales de datos.</li>
+        </ul>
+
+        <h2>3. Finalidad</h2>
+        <p>Utilizamos estos datos exclusivamente para <strong>gestionar procesos de selección</strong>: revisar candidaturas a puestos del equipo, revisar postulaciones de casting y ponernos en contacto contigo sobre el resultado de tu solicitud.</p>
+
+        <h2>4. Base legal</h2>
+        <p>El tratamiento se basa en tu <strong>consentimiento expreso</strong>, que otorgas al marcar la casilla de aceptación antes de enviar cualquier formulario de este sitio.</p>
+
+        <h2>5. Conservación</h2>
+        <p>Conservamos tu candidatura mientras el proceso de selección esté abierto y durante un plazo razonable posterior para poder contactarte en futuras convocatorias, salvo que solicites su eliminación antes.</p>
+
+        <h2>6. Tus derechos</h2>
+        <p>Puedes solicitar en cualquier momento el <strong>acceso, rectificación o eliminación</strong> de tus datos, así como oponerte a su tratamiento, contactando con nuestro equipo a través de Discord.</p>
+
+        <h2>7. Destinatarios</h2>
+        <p>Tus datos no se ceden a terceros. Únicamente son accesibles por el equipo de dirección de Aurora Films Studios a través del panel privado de revisión.</p>
+
+        <h2>8. Menores de edad</h2>
+        <p>Si eres menor de edad, te recomendamos contar con el conocimiento de tu madre, padre o tutor legal antes de enviar cualquier información personal a través de este sitio.</p>
+
+        <h2>9. Contacto</h2>
+        <p>Para cualquier consulta relacionada con esta política, puedes escribirnos a través de nuestro servidor de Discord.</p>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ VIEW: COOKIES ============ -->
+  <div class="view" id="view-cookies">
+    <section class="legal">
+      <div class="wrap">
+        <div class="legal-nav"><a href="#/inicio">Inicio</a><a href="#/privacidad">Política de privacidad</a></div>
+        <h1>Política de cookies</h1>
+        <div class="updated">Última actualización: septiembre de 2026</div>
+
+        <h2>1. Qué usamos</h2>
+        <p>Este sitio no utiliza cookies de publicidad ni de seguimiento de terceros. Empleamos <strong>almacenamiento local del navegador</strong> (localStorage y sessionStorage) con dos finalidades:</p>
+        <ul>
+          <li><strong>Necesario:</strong> recordar que ya has visto el aviso de cookies y mantener la sesión activa cuando accedes al panel privado del equipo.</li>
+          <li><strong>Funcional:</strong> guardar de forma local, en tu propio navegador, las candidaturas y postulaciones enviadas desde ese dispositivo, para que el equipo de dirección pueda revisarlas.</li>
+        </ul>
+
+        <h2>2. Por qué no son cookies de terceros</h2>
+        <p>No compartimos esta información con anunciantes ni con servicios de analítica externos. Los datos permanecen en tu propio navegador y en el del equipo de administración.</p>
+
+        <h2>3. Cómo desactivarlas</h2>
+        <p>Puedes rechazar el almacenamiento no esencial desde el aviso de cookies. Ten en cuenta que, si lo haces, algunas funciones como el envío de formularios o el acceso al panel del equipo pueden dejar de funcionar correctamente.</p>
+
+        <h2>4. Gestión desde el navegador</h2>
+        <p>También puedes eliminar en cualquier momento los datos almacenados desde la configuración de privacidad de tu propio navegador.</p>
+      </div>
+    </section>
+  </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="wrap">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <img src="aurora-logo.png" alt="Aurora Films Studios">
+          <span>Aurora Films Studios</span>
+        </div>
+        <div class="footer-cols">
+          <div class="footer-col">
+            <h4>Estudio</h4>
+            <ul>
+              <li><a href="#/inicio#estudio">Qué hacemos</a></li>
+              <li><a href="#/inicio#proyectos">Proyectos</a></li>
+              <li><a href="#/inicio#trailer">Tráiler</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Colabora</h4>
+            <ul>
+              <li><a href="#/trabajo">Trabaja con nosotros</a></li>
+              <li><a href="#/casting">Casting</a></li>
+              <li><a href="#/login">Acceso del equipo</a></li>
+            </ul>
+          </div>
+          <div class="footer-col">
+            <h4>Legal</h4>
+            <ul>
+              <li><a href="#/privacidad">Política de privacidad</a></li>
+              <li><a href="#/cookies">Política de cookies</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>&copy; 2026 Aurora Films Studios. Producción independiente en Roblox.</span>
+        <div class="socials">
+          <a href="#" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.3 5.3A17.6 17.6 0 0 0 15.9 4l-.3.6a13 13 0 0 1 3.7 1.4 15 15 0 0 0-14.6 0A13 13 0 0 1 8.4 4.6L8.1 4a17.5 17.5 0 0 0-4.4 1.3C1.2 9.6.6 13.8 1 17.9a17.7 17.7 0 0 0 5.3 2.6l.8-1.3a11 11 0 0 1-1.9-.9c.2-.1.3-.2.5-.3a12.7 12.7 0 0 0 10.6 0l.5.3a11 11 0 0 1-1.9.9l.8 1.3a17.6 17.6 0 0 0 5.3-2.6c.5-4.7-.7-8.9-3.7-12.6ZM8.7 15.4c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.8.9 1.7 1.9c0 1-.8 1.9-1.7 1.9Zm6.6 0c-1 0-1.7-.9-1.7-1.9s.8-1.9 1.7-1.9 1.7.9 1.7 1.9-.8 1.9-1.7 1.9Z"/></svg></a>
+          <a href="#" aria-label="YouTube"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23 12s0-3.2-.4-4.7a3 3 0 0 0-2.1-2.1C18.9 4.7 12 4.7 12 4.7s-6.9 0-8.5.5A3 3 0 0 0 1.4 7.3C1 8.8 1 12 1 12s0 3.2.4 4.7a3 3 0 0 0 2.1 2.1c1.6.5 8.5.5 8.5.5s6.9 0 8.5-.5a3 3 0 0 0 2.1-2.1c.4-1.5.4-4.7.4-4.7ZM9.8 15.3V8.7l5.7 3.3-5.7 3.3Z"/></svg></a>
+          <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.6 2h-3.2v13.6a2.9 2.9 0 1 1-2-2.7v-3.3a6.2 6.2 0 1 0 5.2 6.1V8.8a7.9 7.9 0 0 0 4.6 1.5V7.1a4.6 4.6 0 0 1-4.6-4.6Z"/></svg></a>
+          <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 3H22l-7.2 8.2L23 21h-6.6l-5.2-6.5L5.2 21H2l7.7-8.8L1.6 3h6.7l4.7 6L18.9 3Zm-1.2 16.2h1.7L7.4 4.7H5.6l12.1 14.5Z"/></svg></a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+(function(){
+
+  /* ================= CONFIG ================= */
+  var POSITIONS = [
+    { id:'guionista', name:'Guionista', desc:'Escribe las historias y diálogos de nuestras películas y tráilers.' },
+    { id:'editor', name:'Editor/a', desc:'Monta, sonoriza y da ritmo a cada pieza en postproducción.' },
+    { id:'camara', name:'Operador/a de Cámara', desc:'Graba las escenas dentro de Roblox con encuadres cinematográficos.' },
+    { id:'vestuario', name:'Vestuarista / Maquillador/a', desc:'Diseña la apariencia y el vestuario de cada personaje.' },
+    { id:'diseno-produccion', name:'Diseñador/a de Producción', desc:'Define el aspecto visual global: escenarios, props y ambientación.' },
+    { id:'director-arte', name:'Director/a de Arte', desc:'Supervisa la coherencia estética y visual de cada producción.' },
+    { id:'director-produccion', name:'Director/a de Producción', desc:'Coordina equipos, calendarios y recursos durante el rodaje.' },
+    { id:'productor-ejecutivo', name:'Productor/a Ejecutivo/a', desc:'Supervisa el proyecto de principio a fin y representa al estudio.' }
+  ];
+
+  var castingsCache = []; // último listado de castings abiertos obtenido de la API
+
+  /* ================= API HELPERS ================= */
+  function apiGet(url){
+    return fetch(url, { method:'GET', credentials:'same-origin' }).then(function(r){ return r.json().then(function(data){ return { ok:r.ok, data:data }; }); });
+  }
+  function apiPost(url, body){
+    return fetch(url, {
+      method:'POST',
+      credentials:'same-origin',
+      headers:{ 'Content-Type':'application/json' },
+      body: JSON.stringify(body || {})
+    }).then(function(r){ return r.json().then(function(data){ return { ok:r.ok, data:data }; }); });
+  }
+
+  /* ================= LOADER ================= */
+  window.addEventListener('load', function(){
+    setTimeout(function(){ document.getElementById('loader').classList.add('hide'); }, 1200);
+  });
+
+  /* ================= HEADER SCROLL ================= */
+  var header = document.getElementById('siteHeader');
+  window.addEventListener('scroll', function(){
+    header.classList.toggle('scrolled', window.scrollY > 40);
+  });
+
+  /* ================= MOBILE MENU ================= */
+  var burger = document.getElementById('burger');
+  var mobileMenu = document.getElementById('mobileMenu');
+  burger.addEventListener('click', function(){
+    burger.classList.toggle('open');
+    mobileMenu.classList.toggle('open');
+  });
+  mobileMenu.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click', function(){
+      burger.classList.remove('open');
+      mobileMenu.classList.remove('open');
+    });
+  });
+
+  /* ================= COOKIE BANNER ================= */
+  var cookieBanner = document.getElementById('cookieBanner');
+  var consent = localStorage.getItem('aurora_cookie_consent');
+  if(!consent){
+    setTimeout(function(){ cookieBanner.classList.add('show'); }, 900);
+  }
+  document.getElementById('cookieAccept').addEventListener('click', function(){
+    localStorage.setItem('aurora_cookie_consent', 'accepted');
+    cookieBanner.classList.remove('show');
+  });
+  document.getElementById('cookieReject').addEventListener('click', function(){
+    localStorage.setItem('aurora_cookie_consent', 'rejected');
+    cookieBanner.classList.remove('show');
+  });
+
+  /* ================= ROUTER ================= */
+  var views = document.querySelectorAll('.view');
+  function showView(id){
+    views.forEach(function(v){ v.classList.toggle('active', v.id === 'view-' + id); });
+  }
+  function setActiveNav(route){
+    document.querySelectorAll('#navLinks a').forEach(function(a){
+      a.classList.toggle('active', a.dataset.route === route);
+    });
+  }
+
+  function parseHash(){
+    var h = location.hash.replace(/^#\/?/, '');
+    var hashPart = h.split('#')[0];
+    return hashPart.split('/').filter(Boolean);
+  }
+
+  function route(){
+    var parts = parseHash();
+    var view = parts[0] || 'inicio';
+
+    if(view === 'trabajo' && parts[1]){
+      renderJobForm(parts[1]);
+      showView('trabajo-form');
+      setActiveNav('trabajo');
+      window.scrollTo(0,0);
+      return;
+    }
+    if(view === 'casting' && parts[1] === 'apply' && parts[2]){
+      renderCastingForm(parts[2]);
+      showView('casting-form');
+      setActiveNav('casting');
+      window.scrollTo(0,0);
+      return;
+    }
+    if(view === 'admin'){
+      apiGet('/api/me.php').then(function(res){
+        if(!res.ok || !res.data.authenticated){
+          location.hash = '#/login';
+          return;
+        }
+        renderAdmin();
+        showView('admin');
+        window.scrollTo(0,0);
+      });
+      return;
+    }
+    if(view === 'login'){
+      apiGet('/api/me.php').then(function(res){
+        if(res.ok && res.data.authenticated){
+          location.hash = '#/admin';
+          return;
+        }
+        showView('login');
+        window.scrollTo(0,0);
+      });
+      return;
+    }
+
+    var known = ['inicio','trabajo','casting','privacidad','cookies'];
+    if(known.indexOf(view) === -1) view = 'inicio';
+
+    if(view === 'trabajo') renderJobsList();
+    if(view === 'casting') renderCastingList();
+
+    showView(view);
+    setActiveNav(view === 'inicio' ? 'inicio' : view);
+    if(view !== 'inicio') window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange', route);
+
+  /* ================= JOBS ================= */
+  function renderJobsList(){
+    var grid = document.getElementById('jobsGrid');
+    grid.innerHTML = POSITIONS.map(function(p){
+      return '<div class="job-card">' +
+        '<h3>' + p.name + '</h3>' +
+        '<p>' + p.desc + '</p>' +
+        '<a class="btn btn-primary btn-sm" href="#/trabajo/' + p.id + '">Aplicar a este puesto</a>' +
+      '</div>';
+    }).join('');
+  }
+
+  function renderJobForm(posId){
+    var pos = POSITIONS.filter(function(p){ return p.id === posId; })[0];
+    var box = document.getElementById('jobFormBox');
+    if(!pos){
+      box.innerHTML = '<p>No encontramos ese puesto. <a href="#/trabajo" style="color:var(--amber-soft);">Volver a la lista.</a></p>';
+      return;
+    }
+    box.innerHTML =
+      '<div class="form-title">' + pos.name + '</div>' +
+      '<p class="form-sub">' + pos.desc + ' Completa el formulario y nuestro equipo revisará tu candidatura.</p>' +
+      '<div class="form-error" id="jaError">No se pudo enviar la candidatura. Inténtalo de nuevo.</div>' +
+      '<form id="jobApplyForm">' +
+        '<div class="field-row">' +
+          '<div class="field"><label for="jaNombre">Nombre completo</label><input type="text" id="jaNombre" required></div>' +
+          '<div class="field"><label for="jaEdad">Edad</label><input type="number" min="10" max="99" id="jaEdad" required></div>' +
+        '</div>' +
+        '<div class="field-row">' +
+          '<div class="field"><label for="jaRoblox">Usuario de Roblox</label><input type="text" id="jaRoblox" required></div>' +
+          '<div class="field"><label for="jaDiscord">Usuario de Discord</label><input type="text" id="jaDiscord" required></div>' +
+        '</div>' +
+        '<div class="field"><label for="jaPortfolio">Enlace a portfolio o trabajos anteriores (opcional)</label><input type="url" id="jaPortfolio" placeholder="https://"></div>' +
+        '<div class="field"><label for="jaExperiencia">Experiencia previa</label><textarea id="jaExperiencia" required placeholder="Cuéntanos tu experiencia relacionada con este puesto"></textarea></div>' +
+        '<div class="field"><label for="jaDisponibilidad">Disponibilidad horaria</label><input type="text" id="jaDisponibilidad" required placeholder="Ej. Tardes entre semana y fines de semana"></div>' +
+        '<div class="field"><label for="jaMotivacion">¿Por qué quieres este puesto en Aurora Films?</label><textarea id="jaMotivacion" required></textarea></div>' +
+        '<div class="checkbox-field"><input type="checkbox" id="jaPrivacidad" required><label for="jaPrivacidad">He leído y acepto la <a href="#/privacidad" target="_blank">Política de privacidad</a> de Aurora Films Studios.</label></div>' +
+        '<button type="submit" class="btn btn-primary btn-block" id="jaSubmit">Enviar candidatura</button>' +
+      '</form>';
+
+    document.getElementById('jobApplyForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      var errorBox = document.getElementById('jaError');
+      var submitBtn = document.getElementById('jaSubmit');
+      errorBox.classList.remove('show');
+      submitBtn.textContent = 'Enviando...';
+
+      var payload = {
+        puesto: pos.id,
+        nombre: document.getElementById('jaNombre').value.trim(),
+        edad: document.getElementById('jaEdad').value,
+        roblox_user: document.getElementById('jaRoblox').value.trim(),
+        discord_user: document.getElementById('jaDiscord').value.trim(),
+        portfolio: document.getElementById('jaPortfolio').value.trim(),
+        experiencia: document.getElementById('jaExperiencia').value.trim(),
+        disponibilidad: document.getElementById('jaDisponibilidad').value.trim(),
+        motivacion: document.getElementById('jaMotivacion').value.trim()
+      };
+
+      apiPost('/api/candidaturas_create.php', payload).then(function(res){
+        if(!res.ok){
+          submitBtn.textContent = 'Enviar candidatura';
+          errorBox.classList.add('show');
+          return;
+        }
+        box.innerHTML = '<div class="form-success"><h3>Candidatura enviada</h3><p>Gracias, ' + escapeHtml(payload.nombre) + '. Hemos recibido tu candidatura para <strong>' + pos.name + '</strong>. El equipo de dirección la revisará y os contactará por Discord.</p><a href="#/trabajo" class="btn btn-ghost btn-sm">Ver otros puestos</a></div>';
+      }).catch(function(){
+        submitBtn.textContent = 'Enviar candidatura';
+        errorBox.classList.add('show');
+      });
+    });
+  }
+
+  /* ================= CASTING ================= */
+  function renderCastingList(){
+    var grid = document.getElementById('castingGrid');
+    grid.innerHTML = '<div class="casting-empty" style="grid-column:1/-1;">Cargando castings…</div>';
+
+    apiGet('/api/castings_list.php').then(function(res){
+      if(!res.ok){
+        grid.innerHTML = '<div class="casting-empty" style="grid-column:1/-1;">No se pudieron cargar los castings. Inténtalo de nuevo más tarde.</div>';
+        return;
+      }
+      castingsCache = res.data.castings || [];
+      if(castingsCache.length === 0){
+        grid.innerHTML = '<div class="casting-empty" style="grid-column:1/-1;">No hay castings abiertos en este momento. Vuelve pronto.</div>';
+        return;
+      }
+      grid.innerHTML = castingsCache.map(function(c){
+        var open = c.estado === 'abierto';
+        return '<div class="casting-card">' +
+          '<span class="badge ' + (open ? 'open' : 'closed') + '">' + (open ? 'Casting abierto' : 'Casting cerrado') + '</span>' +
+          '<h3>' + escapeHtml(c.personaje) + '</h3>' +
+          '<p>' + escapeHtml(c.descripcion) + '</p>' +
+          (open
+            ? '<a class="btn btn-primary btn-sm" href="#/casting/apply/' + c.id + '">Postularme</a>'
+            : '<button class="btn btn-ghost btn-sm" disabled style="opacity:0.5; cursor:not-allowed;">Casting cerrado</button>'
+          ) +
+        '</div>';
+      }).join('');
+    });
+  }
+
+  function renderCastingForm(castingId){
+    var box = document.getElementById('castingFormBox');
+    box.innerHTML = '<p>Cargando…</p>';
+
+    function withCasting(casting){
+      if(!casting || casting.estado !== 'abierto'){
+        box.innerHTML = '<p>Este casting ya no está disponible. <a href="#/casting" style="color:var(--amber-soft);">Ver castings abiertos.</a></p>';
+        return;
+      }
+      box.innerHTML =
+        '<div class="form-title">' + escapeHtml(casting.personaje) + '</div>' +
+        '<p class="form-sub">' + escapeHtml(casting.descripcion) + ' Cuéntanos por qué encajas con este papel.</p>' +
+        '<div class="form-error" id="caError">No se pudo enviar la postulación. Inténtalo de nuevo.</div>' +
+        '<form id="castingApplyForm">' +
+          '<div class="field-row">' +
+            '<div class="field"><label for="caNombre">Nombre completo</label><input type="text" id="caNombre" required></div>' +
+            '<div class="field"><label for="caEdad">Edad</label><input type="number" min="10" max="99" id="caEdad" required></div>' +
+          '</div>' +
+          '<div class="field-row">' +
+            '<div class="field"><label for="caRoblox">Usuario de Roblox</label><input type="text" id="caRoblox" required></div>' +
+            '<div class="field"><label for="caDiscord">Usuario de Discord</label><input type="text" id="caDiscord" required></div>' +
+          '</div>' +
+          '<div class="field"><label for="caCinta">Enlace a vídeo o audición (opcional)</label><input type="url" id="caCinta" placeholder="https://"></div>' +
+          '<div class="field"><label for="caExperiencia">Experiencia interpretativa</label><textarea id="caExperiencia" required placeholder="Roleplay, teatro, doblaje, cortos anteriores..."></textarea></div>' +
+          '<div class="field"><label for="caMotivacion">¿Por qué encajas con este papel?</label><textarea id="caMotivacion" required></textarea></div>' +
+          '<div class="checkbox-field"><input type="checkbox" id="caPrivacidad" required><label for="caPrivacidad">He leído y acepto la <a href="#/privacidad" target="_blank">Política de privacidad</a> de Aurora Films Studios.</label></div>' +
+          '<button type="submit" class="btn btn-primary btn-block" id="caSubmit">Enviar postulación</button>' +
+        '</form>';
+
+      document.getElementById('castingApplyForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        var errorBox = document.getElementById('caError');
+        var submitBtn = document.getElementById('caSubmit');
+        errorBox.classList.remove('show');
+        submitBtn.textContent = 'Enviando...';
+
+        var payload = {
+          casting_id: casting.id,
+          nombre: document.getElementById('caNombre').value.trim(),
+          edad: document.getElementById('caEdad').value,
+          roblox_user: document.getElementById('caRoblox').value.trim(),
+          discord_user: document.getElementById('caDiscord').value.trim(),
+          cinta_url: document.getElementById('caCinta').value.trim(),
+          experiencia: document.getElementById('caExperiencia').value.trim(),
+          motivacion: document.getElementById('caMotivacion').value.trim()
+        };
+
+        apiPost('/api/casting_postulaciones_create.php', payload).then(function(res){
+          if(!res.ok){
+            submitBtn.textContent = 'Enviar postulación';
+            errorBox.classList.add('show');
+            return;
+          }
+          box.innerHTML = '<div class="form-success"><h3>Postulación enviada</h3><p>Gracias, ' + escapeHtml(payload.nombre) + '. Hemos recibido tu postulación para <strong>' + escapeHtml(casting.personaje) + '</strong>. Te contactaremos por Discord si avanzas en el proceso.</p><a href="#/casting" class="btn btn-ghost btn-sm">Ver otros castings</a></div>';
+        }).catch(function(){
+          submitBtn.textContent = 'Enviar postulación';
+          errorBox.classList.add('show');
+        });
+      });
+    }
+
+    var cached = castingsCache.filter(function(c){ return String(c.id) === String(castingId); })[0];
+    if(cached){
+      withCasting(cached);
+    } else {
+      apiGet('/api/castings_list.php').then(function(res){
+        castingsCache = (res.ok && res.data.castings) || [];
+        var c = castingsCache.filter(function(x){ return String(x.id) === String(castingId); })[0];
+        withCasting(c);
+      });
+    }
+  }
+
+  /* ================= LOGIN ================= */
+  var loginForm = document.getElementById('loginForm');
+  var loginError = document.getElementById('loginError');
+  loginForm.addEventListener('submit', function(e){
+    e.preventDefault();
+    var u = document.getElementById('loginUser').value.trim();
+    var p = document.getElementById('loginPass').value;
+    apiPost('/api/login.php', { usuario: u, password: p }).then(function(res){
+      if(res.ok && res.data.ok){
+        loginError.classList.remove('show');
+        loginForm.reset();
+        location.hash = '#/admin';
+      } else {
+        loginError.classList.add('show');
+      }
+    }).catch(function(){
+      loginError.classList.add('show');
+    });
+  });
+  document.getElementById('logoutBtn').addEventListener('click', function(){
+    apiPost('/api/logout.php', {}).then(function(){
+      location.hash = '#/inicio';
+    });
+  });
+
+  /* ================= ADMIN ================= */
+  var currentAdminTab = 'candidaturas';
+  document.querySelectorAll('.admin-tab').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      currentAdminTab = btn.dataset.tab;
+      document.querySelectorAll('.admin-tab').forEach(function(b){ b.classList.toggle('active', b === btn); });
+      document.querySelectorAll('.admin-panel').forEach(function(p){ p.classList.toggle('active', p.id === 'panel-' + currentAdminTab); });
+    });
+  });
+
+  function renderAdmin(){
+    document.getElementById('adminStats').innerHTML = '<div class="stat-box"><div class="n">…</div><div class="l">Cargando</div></div>';
+
+    var filterPos = document.getElementById('filterPosition');
+    filterPos.innerHTML = '<option value="todos">Todos los puestos</option>' + POSITIONS.map(function(p){
+      return '<option value="' + p.id + '">' + p.name + '</option>';
+    }).join('');
+
+    Promise.all([
+      apiGet('/api/candidaturas_list.php?estado=todos&puesto=todos'),
+      apiGet('/api/casting_postulaciones_list.php?estado=todos&casting_id=todos'),
+      apiGet('/api/castings_list.php?all=1')
+    ]).then(function(results){
+      var apps = (results[0].ok && results[0].data.candidaturas) || [];
+      var castApps = (results[1].ok && results[1].data.postulaciones) || [];
+      var allCastings = (results[2].ok && results[2].data.castings) || [];
+
+      var pendCount = apps.filter(function(a){ return a.estado === 'pendiente'; }).length;
+      var castPendCount = castApps.filter(function(a){ return a.estado === 'pendiente'; }).length;
+      var openCastings = allCastings.filter(function(c){ return c.estado === 'abierto'; }).length;
+
+      document.getElementById('adminStats').innerHTML =
+        statBox(apps.length, 'Candidaturas totales') +
+        statBox(pendCount, 'Candidaturas pendientes') +
+        statBox(castPendCount, 'Postulaciones de casting pendientes') +
+        statBox(openCastings, 'Castings abiertos');
+    });
+
+    renderApplicationsList();
+    renderCastingManageList();
+    renderCastingApplicationsList();
+  }
+
+  function statBox(n, label){
+    return '<div class="stat-box"><div class="n">' + n + '</div><div class="l">' + label + '</div></div>';
+  }
+
+  function renderApplicationsList(){
+    var posFilter = document.getElementById('filterPosition').value || 'todos';
+    var statusFilter = document.getElementById('filterStatus').value || 'todos';
+    var container = document.getElementById('applicationsList');
+    container.innerHTML = '<div class="empty-note">Cargando candidaturas…</div>';
+
+    apiGet('/api/candidaturas_list.php?estado=' + encodeURIComponent(statusFilter) + '&puesto=' + encodeURIComponent(posFilter)).then(function(res){
+      if(!res.ok){ container.innerHTML = '<div class="empty-note">No se pudieron cargar las candidaturas.</div>'; return; }
+      var list = res.data.candidaturas || [];
+      if(list.length === 0){ container.innerHTML = '<div class="empty-note">No hay candidaturas que coincidan con este filtro.</div>'; return; }
+
+      container.innerHTML = list.map(function(a){
+        return '<div class="app-card">' +
+          '<div class="app-card-top">' +
+            '<div><h4>' + escapeHtml(a.nombre) + ' — ' + escapeHtml(a.puesto_nombre) + '</h4>' +
+            '<div class="app-card-meta">' + formatDate(a.fecha_creacion) + ' · Roblox: ' + escapeHtml(a.roblox_user) + ' · Discord: ' + escapeHtml(a.discord_user) + '</div></div>' +
+            '<span class="badge ' + statusClass(a.estado) + '">' + statusLabel(a.estado) + '</span>' +
+          '</div>' +
+          '<div class="app-card-body">' +
+            '<div><div class="k">Edad</div>' + escapeHtml(a.edad) + '</div>' +
+            '<div><div class="k">Disponibilidad</div>' + escapeHtml(a.disponibilidad) + '</div>' +
+            (a.portfolio ? '<div class="full"><div class="k">Portfolio</div><a href="' + escapeHtml(a.portfolio) + '" target="_blank" style="color:var(--amber-soft);">' + escapeHtml(a.portfolio) + '</a></div>' : '') +
+            '<div class="full"><div class="k">Experiencia</div>' + escapeHtml(a.experiencia) + '</div>' +
+            '<div class="full"><div class="k">Motivación</div>' + escapeHtml(a.motivacion) + '</div>' +
+          '</div>' +
+          '<div class="app-card-actions">' +
+            '<button class="btn btn-sm btn-outline-ok" data-act="aceptado" data-id="' + a.id + '">Aceptar</button>' +
+            '<button class="btn btn-sm btn-outline-bad" data-act="rechazado" data-id="' + a.id + '">Rechazar</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      container.querySelectorAll('button[data-act]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          apiPost('/api/candidaturas_update.php', { id: btn.dataset.id, estado: btn.dataset.act }).then(function(){
+            renderAdmin();
+          });
+        });
+      });
+    });
+  }
+  document.getElementById('filterPosition').addEventListener('change', renderApplicationsList);
+  document.getElementById('filterStatus').addEventListener('change', renderApplicationsList);
+
+  function renderCastingManageList(){
+    var container = document.getElementById('castingManageList');
+    container.innerHTML = '<div class="empty-note">Cargando castings…</div>';
+
+    apiGet('/api/castings_list.php?all=1').then(function(res){
+      if(!res.ok){ container.innerHTML = '<div class="empty-note">No se pudieron cargar los castings.</div>'; return; }
+      var list = res.data.castings || [];
+      renderCastingFilterOptions(list);
+
+      if(list.length === 0){ container.innerHTML = '<div class="empty-note">Todavía no has creado ningún casting.</div>'; return; }
+
+      container.innerHTML = list.map(function(c){
+        var open = c.estado === 'abierto';
+        return '<div class="casting-manage-item">' +
+          '<div class="info"><h4>' + escapeHtml(c.personaje) + '</h4><p>' + escapeHtml(c.descripcion) + '</p></div>' +
+          '<div class="casting-manage-actions">' +
+            '<span class="badge ' + (open ? 'open' : 'closed') + '">' + (open ? 'Abierto' : 'Cerrado') + '</span>' +
+            '<button class="btn btn-sm btn-ghost" data-toggle="' + c.id + '">' + (open ? 'Cerrar casting' : 'Reabrir casting') + '</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      container.querySelectorAll('button[data-toggle]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          apiPost('/api/castings_toggle.php', { id: btn.dataset.toggle }).then(function(){
+            renderAdmin();
+          });
+        });
+      });
+    });
+  }
+
+  document.getElementById('newCastingForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var title = document.getElementById('ncTitle').value.trim();
+    var desc = document.getElementById('ncDesc').value.trim();
+    if(!title || !desc) return;
+    apiPost('/api/castings_create.php', { personaje: title, descripcion: desc }).then(function(res){
+      if(res.ok){
+        document.getElementById('newCastingForm').reset();
+        renderAdmin();
+      }
+    });
+  });
+
+  function renderCastingFilterOptions(list){
+    var sel = document.getElementById('filterCasting');
+    var current = sel.value;
+    sel.innerHTML = '<option value="todos">Todos los castings</option>' + list.map(function(c){
+      return '<option value="' + c.id + '">' + escapeHtml(c.personaje) + '</option>';
+    }).join('');
+    if(current) sel.value = current;
+  }
+
+  function renderCastingApplicationsList(){
+    var castFilter = document.getElementById('filterCasting').value || 'todos';
+    var statusFilter = document.getElementById('filterCastingStatus').value || 'todos';
+    var container = document.getElementById('castingApplicationsList');
+    container.innerHTML = '<div class="empty-note">Cargando postulaciones…</div>';
+
+    apiGet('/api/casting_postulaciones_list.php?estado=' + encodeURIComponent(statusFilter) + '&casting_id=' + encodeURIComponent(castFilter)).then(function(res){
+      if(!res.ok){ container.innerHTML = '<div class="empty-note">No se pudieron cargar las postulaciones.</div>'; return; }
+      var list = res.data.postulaciones || [];
+      if(list.length === 0){ container.innerHTML = '<div class="empty-note">No hay postulaciones que coincidan con este filtro.</div>'; return; }
+
+      container.innerHTML = list.map(function(a){
+        return '<div class="app-card">' +
+          '<div class="app-card-top">' +
+            '<div><h4>' + escapeHtml(a.nombre) + ' — ' + escapeHtml(a.personaje) + '</h4>' +
+            '<div class="app-card-meta">' + formatDate(a.fecha_creacion) + ' · Roblox: ' + escapeHtml(a.roblox_user) + ' · Discord: ' + escapeHtml(a.discord_user) + '</div></div>' +
+            '<span class="badge ' + statusClass(a.estado) + '">' + statusLabel(a.estado) + '</span>' +
+          '</div>' +
+          '<div class="app-card-body">' +
+            '<div><div class="k">Edad</div>' + escapeHtml(a.edad) + '</div>' +
+            (a.cinta_url ? '<div><div class="k">Vídeo / audición</div><a href="' + escapeHtml(a.cinta_url) + '" target="_blank" style="color:var(--amber-soft);">Enlace</a></div>' : '<div></div>') +
+            '<div class="full"><div class="k">Experiencia interpretativa</div>' + escapeHtml(a.experiencia) + '</div>' +
+            '<div class="full"><div class="k">Por qué encaja</div>' + escapeHtml(a.motivacion) + '</div>' +
+          '</div>' +
+          '<div class="app-card-actions">' +
+            '<button class="btn btn-sm btn-outline-ok" data-cact="aceptado" data-cid="' + a.id + '">Aceptar</button>' +
+            '<button class="btn btn-sm btn-outline-bad" data-cact="rechazado" data-cid="' + a.id + '">Rechazar</button>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      container.querySelectorAll('button[data-cact]').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          apiPost('/api/casting_postulaciones_update.php', { id: btn.dataset.cid, estado: btn.dataset.cact }).then(function(){
+            renderAdmin();
+          });
+        });
+      });
+    });
+  }
+  document.getElementById('filterCasting').addEventListener('change', renderCastingApplicationsList);
+  document.getElementById('filterCastingStatus').addEventListener('change', renderCastingApplicationsList);
+
+  /* ================= HELPERS ================= */
+  function statusClass(s){ return s === 'aceptado' ? 'accepted' : s === 'rechazado' ? 'rejected' : 'pending'; }
+  function statusLabel(s){ return s === 'aceptado' ? 'Aceptada' : s === 'rechazado' ? 'Rechazada' : 'Pendiente'; }
+  function formatDate(ts){
+    if(!ts) return '';
+    var d = new Date(String(ts).replace(' ', 'T'));
+    if(isNaN(d.getTime())) return ts;
+    return d.toLocaleDateString('es-ES', { day:'2-digit', month:'short', year:'numeric' });
+  }
+  function escapeHtml(str){
+    if(str === undefined || str === null) return '';
+    return String(str).replace(/[&<>"']/g, function(m){
+      return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[m];
+    });
+  }
+
+  /* ================= INIT ================= */
+  renderJobsList();
+  route();
+
+})();
+</script>
+
+</body>
+</html>
